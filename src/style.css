@@ -252,6 +252,7 @@ button {
 }
 
 .wii-pointer {
+  isolation: isolate;
   position: fixed;
   left: 0;
   top: 0;
@@ -271,6 +272,7 @@ button {
 }
 
 .wii-pointer::before {
+  z-index: 2;
   content: "";
   position: absolute;
   inset: 0;
@@ -281,4 +283,96 @@ button {
 .wii-pointer.is-hover {
   filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.22));
 }
+/* ring azzurro stile Wii sotto la punta */
+.wii-pointer::after {
+  z-index: 1;
+  content: "";
+  position: absolute;
+
+  /* posizionamento del ring rispetto al box del cursore */
+  left: 0px;
+  top: -9px;
+
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+
+  background: radial-gradient(circle at 35% 35%, rgba(255,255,255,.95), rgba(255,255,255,.20) 35%, rgba(43,184,255,.22) 70%, rgba(43,184,255,0) 75%);
+  box-shadow:
+    0 0 0 2px rgba(43,184,255,.55),
+    0 0 18px rgba(43,184,255,.45);
+
+   opacity: 0;
+  transform: scale(0.75);
+  filter: blur(3px);
+
+  transition:
+    opacity 400ms ease,
+    transform 400ms cubic-bezier(.2, .9, .2, 1),
+    filter 400ms ease;
+}
+
+/* si accende quando sei sopra un elemento cliccabile */
+.wii-pointer.is-hover::after {
+  opacity: 1;
+  transform: scale(1);
+  filter: blur(0px);
+}
+/* pulse al click */
+.wii-pointer.is-down::after {
+  transform: scale(1.18);
+  opacity: 0.95;
+  filter: blur(0px);
+  transition:
+    transform 120ms cubic-bezier(.2, .9, .2, 1),
+    opacity 120ms ease;
+}
+/* --- Wii click feel --- */
+.wii-tile {
+  transform-origin: center;
+}
+
+.wii-tile:active {
+  transform: translateY(-1px) scale(0.985);
+}
+
+.wii-tile::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.98);
+  transition: opacity 180ms ease, transform 180ms ease;
+  box-shadow: 0 0 0 0 rgba(43,184,255,0.0);
+}
+
+.wii-tile:active::before {
+  opacity: 1;
+  transform: scale(1);
+  box-shadow: 0 0 0 10px rgba(43,184,255,0.16);
+}
+/* --- Page swoosh (Wii-ish) --- */
+.wii-grid {
+  transition: transform 220ms cubic-bezier(.2,.9,.2,1), opacity 220ms ease;
+  will-change: transform, opacity;
+}
+
+.wii-grid.is-swoosh-out-left {
+  transform: translateX(-28px);
+  opacity: 0;
+}
+
+.wii-grid.is-swoosh-out-right {
+  transform: translateX(28px);
+  opacity: 0;
+}
+
+.wii-grid.is-swoosh-in {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+
 
