@@ -3,39 +3,44 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>VS Portfolio — Wii-ish UI</title>
+    <title>RS Portfolio — Wii-like</title>
   </head>
 
   <body>
-    <header class="topbar">
-      <div class="brand">VS Portfolio</div>
+    <main class="wii-shell">
+      <section class="wii-board" aria-label="Menu canali">
+        <div class="wii-grid" id="grid" aria-label="Canali"></div>
 
-      <nav class="nav">
-        <button class="pill" data-route="home">Home</button>
-        <button class="pill" data-route="works">Lavori</button>
-        <button class="pill" data-route="about">Chi sono</button>
-        <button class="pill" data-route="contact">Contatti</button>
-      </nav>
-    </header>
+        <button class="wii-arrow wii-arrow-left" id="prevPage" aria-label="Pagina precedente">
+          ‹
+        </button>
+        <button class="wii-arrow wii-arrow-right" id="nextPage" aria-label="Pagina successiva">
+          ›
+        </button>
+      </section>
 
-    <main class="shell">
-      <section class="panel" id="view">
-        <div class="titleRow">
-          <h1 id="viewTitle">Home</h1>
-          <div class="statusDot" title="Online"></div>
+      <footer class="wii-bar" aria-label="Barra inferiore">
+        <button class="wii-pill" id="btnLeft" type="button" aria-label="Pulsante sinistro">
+          Wii
+        </button>
+
+        <div class="wii-clock">
+          <div class="wii-time" id="time">--:--</div>
+          <div class="wii-date" id="date">---</div>
         </div>
 
-        <div class="grid" id="grid"></div>
-      </section>
+        <button class="wii-pill" id="btnRight" type="button" aria-label="Pulsante destro">
+          ✉︎
+        </button>
+      </footer>
     </main>
 
-    <footer class="footer">
-      <div class="footerInner">
-        <span>© <span id="year"></span> RS</span>
-        <span class="hint">Suggerimento: naviga con Tab ↹</span>
-      </div>
-    </footer>
+    <div id="wiiPointer" class="wii-pointer" aria-hidden="true"></div>
 
     <script type="module" src="/src/main.js"></script>
   </body>
+    <div id="wiiPointer" class="wii-pointer" aria-hidden="true"></div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+
 </html>
