@@ -3,44 +3,53 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RS Portfolio — Wii-like</title>
+    <title>RS Portfolio — Wii-ish UI</title>
   </head>
 
   <body>
     <main class="wii-shell">
-      <section class="wii-board" aria-label="Menu canali">
-        <div class="wii-grid" id="grid" aria-label="Canali"></div>
+      <header class="wii-header" aria-label="Titolo">
+  <h1 class="wii-h1">Portfolio Valerio Serani</h1>
+</header>
 
-        <button class="wii-arrow wii-arrow-left" id="prevPage" aria-label="Pagina precedente">
-          ‹
-        </button>
-        <button class="wii-arrow wii-arrow-right" id="nextPage" aria-label="Pagina successiva">
-          ›
-        </button>
+      <!-- BOARD (area principale) -->
+      <section class="wii-board" id="board" aria-label="Menu canali">
+        <div class="wii-grid" id="grid" aria-label="Canali"></div>
       </section>
 
+      <!-- FOOTER (sempre in basso) -->
       <footer class="wii-bar" aria-label="Barra inferiore">
-        <button class="wii-pill" id="btnLeft" type="button" aria-label="Pulsante sinistro">
-          Toggle music
+        <button class="wii-pill" id="btnLeft" type="button" aria-label="Audio">
+          🔊
         </button>
 
-        <div class="wii-clock">
+        <div class="wii-clock" aria-label="Orologio">
           <div class="wii-time" id="time">--:--</div>
           <div class="wii-date" id="date">---</div>
         </div>
 
-        <button class="wii-pill" id="btnRight" type="button" aria-label="Pulsante destro">
-          ✉︎
+        <button class="wii-pill" id="btnRight" type="button" aria-label="Messaggi">
+          🎮
         </button>
       </footer>
     </main>
 
+    <!-- Pointer -->
     <div id="wiiPointer" class="wii-pointer" aria-hidden="true"></div>
+
+    <!-- Wii "Channel" overlay -->
+    <div id="wiiOverlay" class="wii-overlay" aria-hidden="true">
+      <div class="wii-overlayPanel">
+        <div class="wii-overlayTop">
+          <button id="overlayBack" class="wii-pill" type="button">⬅ Back</button>
+          <div class="wii-overlayTitle" id="overlayTitle">Titolo</div>
+          <div style="width: 84px"></div>
+        </div>
+
+        <div class="wii-overlayBody" id="overlayBody"></div>
+      </div>
+    </div>
 
     <script type="module" src="/src/main.js"></script>
   </body>
-    <div id="wiiPointer" class="wii-pointer" aria-hidden="true"></div>
-  <script type="module" src="/src/main.js"></script>
-</body>
-
 </html>
