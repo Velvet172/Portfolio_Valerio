@@ -26,7 +26,7 @@ const pages = [
       t: "Progetti",
       s: "Case study e lavori",
       href: "#projects",
-      previews: ["/img/01.jpg", "/img/02.jpg", "/img/03.jpg"],
+      previews: ["img/01.jpg", "img/02.jpg", "img/03.jpg"],
     },
     { icon: "🎬", t: "Video", s: "Reel e underwater", href: "#videos" },
     { icon: "👋", t: "Chi sono", s: "Bio + competenze", href: "#about" },
