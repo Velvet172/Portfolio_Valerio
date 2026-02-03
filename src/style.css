@@ -50,22 +50,12 @@ body{
   height: min(var(--shellH), calc(100vh - var(--outer)));
   margin: 0;
 
-  --ui-scale: 1;
-}
-
-.wii-shellInner{
-  width: 100%;
-  height: 100%;
   padding: 14px 14px 13px;
   padding-bottom: calc(13px + env(safe-area-inset-bottom));
 
   display: grid;
   grid-template-rows: auto 1fr auto;
   gap: 18px;
-
-  transform: scale(var(--ui-scale));
-  transform-origin: top left;
-  will-change: transform;
 }
 
 /* viewport units più affidabili su mobile */
@@ -753,7 +743,7 @@ body{
   .wii-time{ font-size: 24px; }
   .wii-date{ font-size: 12px; }
 
-  .wii-shellInner{ gap: 10px; padding: 10px 10px calc(10px + env(safe-area-inset-bottom)); }
+  .wii-shell{ gap: 10px; padding: 10px 10px calc(10px + env(safe-area-inset-bottom)); }
   .wii-header{ padding: 4px 8px; }
   .wii-board{ padding: 8px; border-radius: 30px; }
 
@@ -774,7 +764,7 @@ body{
 
 @media (max-width: 380px), (max-height: 700px){
   :root{ --outer: 10px; --gap: 6px; }
-  .wii-shellInner{ gap: 8px; }
+  .wii-shell{ gap: 8px; }
   .wii-h1{ font-size: 15px; }
   .wii-time{ font-size: 22px; }
   .wii-tileContent{ padding: 8px; }

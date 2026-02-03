@@ -1278,54 +1278,6 @@ function bindIntro() {
 }
 
 /* =========================
-   AUTO SCALE (fit one screen)
-========================= */
-function applyAutoScale() {
-  const shell = document.querySelector(".wii-shell");
-  const inner = shell?.querySelector(".wii-shellInner");
-  if (!shell || !inner) return;
-
-  const isCoarse = window.matchMedia?.("(pointer: coarse)")?.matches ?? false;
-  const enableAutoscale = isCoarse;
-
-  if (!enableAutoscale) {
-    shell.style.setProperty("--ui-scale", "1");
-    shell.style.removeProperty("width");
-    shell.style.removeProperty("height");
-    shell.classList.remove("is-autoscale");
-    return;
-  }
-
-  // reset to natural size before measuring
-  shell.style.setProperty("--ui-scale", "1");
-  shell.style.removeProperty("width");
-  shell.style.removeProperty("height");
-  shell.classList.remove("is-autoscale");
-
-  const rootStyles = getComputedStyle(document.documentElement);
-  const outer = parseFloat(rootStyles.getPropertyValue("--outer")) || 28;
-
-  const vv = window.visualViewport;
-  const vw = vv?.width || window.innerWidth;
-  const vh = vv?.height || window.innerHeight;
-
-  const availW = Math.max(0, vw - outer);
-  const availH = Math.max(0, vh - outer);
-
-  const rect = inner.getBoundingClientRect();
-  const naturalW = rect.width || availW;
-  const naturalH = rect.height || availH;
-
-  const scale = Math.min(availW / naturalW, availH / naturalH, 1);
-  const scaledW = Math.max(1, Math.round(naturalW * scale));
-  const scaledH = Math.max(1, Math.round(naturalH * scale));
-
-  shell.style.setProperty("--ui-scale", scale.toFixed(4));
-  shell.style.width = `${scaledW}px`;
-  shell.style.height = `${scaledH}px`;
-  shell.classList.toggle("is-autoscale", scale < 0.999);
-}
-/* =========================
    INIT
 ========================= */
 renderPage();
@@ -1334,7 +1286,3 @@ if (grid) grid.classList.add("is-swoosh-in");
 tickClock();
 setInterval(tickClock, 1000);
 bindIntro();
-
-applyAutoScale();
-window.addEventListener("resize", applyAutoScale);
-window.visualViewport?.addEventListener("resize", applyAutoScale);
