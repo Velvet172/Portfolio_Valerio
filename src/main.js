@@ -3,6 +3,8 @@ import "./style.css";
 /* =========================
    CONFIG
 ========================= */
+const BASE = import.meta.env.BASE_URL; // es: "/Portfolio_Valerio/"
+const asset = (p) => `${BASE}${p.replace(/^\/+/, "")}`; // normalizza
 const ENABLE_PAGES = false; // quando vorrai 2 pagine: metti true
 
 /* =========================
@@ -42,7 +44,7 @@ const pages = [
       t: "Progetti",
       s: "Case study e lavori",
       href: "#projects",
-      previews: ["/img/01.jpg", "/img/02.jpg", "/img/03.jpg"],
+      previews: [asset("img/01.jpg"), asset("img/02.jpg"), asset("img/03.jpg")],
     },
     { icon: "🎬", t: "Video", s: "Reel e underwater", href: "#videos" },
     { icon: "👋", t: "Chi sono", s: "Bio + competenze", href: "#about" },
@@ -370,7 +372,7 @@ const channelContent = {
         id: "bestof",
         slides: [
           {
-            src: "/img/01.jpg",
+            src: asset("img/01.jpg"),
             client: "Selezione",
             title: "Best of 2024–2026",
             what: "Riprese, montaggio, delivery social",
@@ -380,7 +382,7 @@ const channelContent = {
             `,
           },
           {
-            src: "/img/02.jpg",
+            src: asset("img/02.jpg"),
             client: "Cliente X",
             title: "Campagna social",
             what: "Reel + ads",
@@ -390,7 +392,7 @@ const channelContent = {
             `,
           },
           {
-            src: "/img/03.jpg",
+            src: asset("img/03.jpg"),
             client: "Cliente Y",
             title: "Video promo",
             what: "Shooting + color + sound",
