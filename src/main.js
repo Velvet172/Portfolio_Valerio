@@ -26,6 +26,8 @@ const overlayTitle = document.getElementById("overlayTitle");
 const overlayBody = document.getElementById("overlayBody");
 
 const pointerEl = document.getElementById("wiiPointer");
+const imgViewer = document.getElementById("imgViewer");
+const imgViewerSrc = document.getElementById("imgViewerSrc");
 
 /* =========================
    HELPERS
@@ -44,10 +46,24 @@ const pages = [
       t: "Progetti",
       s: "Case study e lavori",
       href: "#projects",
-      previews: [asset("img/01.jpg"), asset("img/02.jpg"), asset("img/03.jpg")],
+      previews: [
+        asset("img/PROGETTI/PROG_1.jpg"),
+        asset("img/PROGETTI/PROG_2.jpg"),
+        asset("img/PROGETTI/PROG_3.jpg"),
+      ],
     },
     { icon: "🎬", t: "Video", s: "Reel e underwater", href: "#videos" },
-    { icon: "👋", t: "Chi sono", s: "Bio + competenze", href: "#about" },
+    {
+      icon: "👋",
+      t: "Chi sono",
+      s: "Bio + competenze",
+      href: "#about",
+      previews: [
+        asset("img/BIO/BIO_1.jpg"),
+        asset("img/BIO/BIO_2.jpg"),
+        asset("img/BIO/BIO_3.jpg"),
+      ],
+    },
     { icon: "✉️", t: "Contatti", s: "Mail e social", href: "#contact" },
 
     { icon: "🛞", t: "Automotive", s: "Officina / brand", href: "#auto" },
@@ -404,6 +420,7 @@ const overlayState = {
   slideIndex: 0,
   dom: null, // cache carousel nodes
 };
+let bioCarouselTimer = null;
 
 const channelContent = {
   "#projects": {
@@ -413,33 +430,133 @@ const channelContent = {
         id: "bestof",
         slides: [
           {
-            src: asset("img/01.jpg"),
-            client: "Selezione",
-            title: "Best of 2024–2026",
-            what: "Riprese, montaggio, delivery social",
+            src: asset("img/PROGETTI/PROG_1.jpg"),
+            client: "Sunsilk",
+            title: "Testata Home 2025",
+            what: "Creativity + layout",
             moreHtml: `
-              <h3 class="chMoreTitle">Best of 2024–2026</h3>
-              <p class="chMoreText">Qui ci metti testo lungo: contesto, obiettivo, ruolo, risultati ecc.</p>
+              <h3 class="chMoreTitle">Sunsilk — Testata Home</h3>
+              <p class="chMoreText">Contenuto segnaposto: contesto, obiettivi, ruolo, output.</p>
             `,
           },
           {
-            src: asset("img/02.jpg"),
-            client: "Cliente X",
-            title: "Campagna social",
-            what: "Reel + ads",
+            src: asset("img/PROGETTI/PROG_2.jpg"),
+            client: "M&M’s / UCI",
+            title: "Screentime Cinema",
+            what: "Layout + output ADV",
             moreHtml: `
-              <h3 class="chMoreTitle">Campagna social</h3>
-              <p class="chMoreText">Dettagli, metriche, cosa hai fatto tu, timing, output.</p>
+              <h3 class="chMoreTitle">M&M’s / UCI — Screentime</h3>
+              <p class="chMoreText">Contenuto segnaposto: obiettivi, ruoli, risultati.</p>
             `,
           },
           {
-            src: asset("img/03.jpg"),
-            client: "Cliente Y",
-            title: "Video promo",
-            what: "Shooting + color + sound",
+            src: asset("img/PROGETTI/PROG_3.jpg"),
+            client: "Cliente",
+            title: "Visual",
+            what: "Creativity / design",
             moreHtml: `
-              <h3 class="chMoreTitle">Video promo</h3>
-              <p class="chMoreText">Case study: obiettivo, set, post, consegna finale.</p>
+              <h3 class="chMoreTitle">Visual</h3>
+              <p class="chMoreText">Contenuto segnaposto: contesto, obiettivo, delivery.</p>
+            `,
+          },
+          {
+            src: asset("img/PROGETTI/PROG_4.jpg"),
+            client: "Snickers / Twix",
+            title: "Cover Adattamento",
+            what: "Visual + layout",
+            moreHtml: `
+              <h3 class="chMoreTitle">Snickers / Twix</h3>
+              <p class="chMoreText">Contenuto segnaposto: brief, processo, risultato.</p>
+            `,
+          },
+          {
+            src: asset("img/PROGETTI/PROG_5.jpg"),
+            client: "Compeed",
+            title: "Volantino Stop Brufoli",
+            what: "Print / layout",
+            moreHtml: `
+              <h3 class="chMoreTitle">Compeed — Volantino</h3>
+              <p class="chMoreText">Contenuto segnaposto: obiettivi, stile, output.</p>
+            `,
+          },
+          {
+            src: asset("img/PROGETTI/PROG_6.jpg"),
+            client: "Boem",
+            title: "Visual",
+            what: "Brand / creative",
+            moreHtml: `
+              <h3 class="chMoreTitle">Boem</h3>
+              <p class="chMoreText">Contenuto segnaposto: concept e direzione visiva.</p>
+            `,
+          },
+          {
+            src: asset("img/PROGETTI/PROG_7.jpg"),
+            client: "Landing",
+            title: "Carousel",
+            what: "UI / layout",
+            moreHtml: `
+              <h3 class="chMoreTitle">Landing Carousel</h3>
+              <p class="chMoreText">Contenuto segnaposto: UX e output.</p>
+            `,
+          },
+          {
+            src: asset("img/PROGETTI/PROG_8.jpg"),
+            client: "Cartolina",
+            title: "Fronte",
+            what: "Print / design",
+            moreHtml: `
+              <h3 class="chMoreTitle">Cartolina</h3>
+              <p class="chMoreText">Contenuto segnaposto: concept e delivery.</p>
+            `,
+          },
+          {
+            src: asset("img/PROGETTI/PROG_9.jpg"),
+            client: "Control",
+            title: "Visual",
+            what: "Brand / layout",
+            moreHtml: `
+              <h3 class="chMoreTitle">Control</h3>
+              <p class="chMoreText">Contenuto segnaposto: obiettivo e output.</p>
+            `,
+          },
+          {
+            src: asset("img/PROGETTI/PROG_10.jpg"),
+            client: "Amuchina",
+            title: "Hai Vinto",
+            what: "Campaign / visual",
+            moreHtml: `
+              <h3 class="chMoreTitle">Amuchina — Hai Vinto</h3>
+              <p class="chMoreText">Contenuto segnaposto: campagna e risultati.</p>
+            `,
+          },
+          {
+            src: asset("img/PROGETTI/PROG_11.jpg"),
+            client: "Campagna",
+            title: "Hai Vinto",
+            what: "Visual / layout",
+            moreHtml: `
+              <h3 class="chMoreTitle">Hai Vinto</h3>
+              <p class="chMoreText">Contenuto segnaposto: brief e output.</p>
+            `,
+          },
+          {
+            src: asset("img/PROGETTI/PROG_12.jpg"),
+            client: "Testata Home",
+            title: "Visual",
+            what: "Layout / design",
+            moreHtml: `
+              <h3 class="chMoreTitle">Testata Home</h3>
+              <p class="chMoreText">Contenuto segnaposto: versione e varianti.</p>
+            `,
+          },
+          {
+            src: asset("img/PROGETTI/PROG_13.jpg"),
+            client: "UILtemp",
+            title: "App Site Play",
+            what: "UI / layout",
+            moreHtml: `
+              <h3 class="chMoreTitle">UILtemp — App Site</h3>
+              <p class="chMoreText">Contenuto segnaposto: UX, UI, output.</p>
             `,
           },
         ],
@@ -464,13 +581,16 @@ const channelContent = {
   "#about": {
     title: "Chi sono",
     html: `
-      <div class="wii-card">
-        <h3>Bio</h3>
-        <p>Roberto Serani — videomaker, underwater + automotive.</p>
-      </div>
-      <div class="wii-card">
-        <h3>Skills</h3>
-        <p>Riprese, montaggio, storytelling, workflow AI.</p>
+      <div class="wii-card bio-card">
+        <div class="bioCarousel" aria-label="Chi sono - carosello">
+          <img class="bioMedia" src="${asset("img/BIO/BIO_1.jpg")}" alt="" loading="lazy" decoding="async">
+          <img class="bioMedia" src="${asset("img/BIO/BIO_2.jpg")}" alt="" loading="lazy" decoding="async">
+          <img class="bioMedia" src="${asset("img/BIO/BIO_3.jpg")}" alt="" loading="lazy" decoding="async">
+        </div>
+        <div class="bioDesc">
+          <h3>Chi sono</h3>
+          <p>Qui inserisco una breve descrizione bio e competenze (segnaposto).</p>
+        </div>
       </div>
     `,
   },
@@ -591,6 +711,10 @@ function applyProjectSlideUI(slides, idx) {
   if (dom.capTitle) dom.capTitle.textContent = sl.title || "";
   if (dom.capWhat) dom.capWhat.textContent = sl.what || "";
 
+  if (dom.frame) {
+    dom.frame.style.setProperty("--ch-bg", `url("${sl.src}")`);
+  }
+
   if (dom.moreContent) dom.moreContent.innerHTML = sl.moreHtml || "";
 }
 
@@ -618,6 +742,42 @@ function closeMore() {
 }
 
 /* =========================
+   BIO carousel (auto)
+========================= */
+function setupBioCarousel() {
+  stopBioCarousel();
+
+  const frame = overlayBody?.querySelector(".bioCarousel");
+  const card = overlayBody?.querySelector(".wii-card");
+  const imgs = frame ? Array.from(frame.querySelectorAll(".bioMedia")) : [];
+  if (!frame || !imgs.length) return;
+
+  if (card) card.classList.add("bio-no-blur");
+
+  let idx = 0;
+  const apply = () => {
+    imgs.forEach((img, i) => img.classList.toggle("is-on", i === idx));
+    const src = imgs[idx]?.getAttribute("src");
+    if (src) frame.style.setProperty("--bio-bg", `url("${src}")`);
+  };
+
+  apply();
+  bioCarouselTimer = window.setInterval(() => {
+    idx = (idx + 1) % imgs.length;
+    apply();
+  }, 3000);
+
+  if (card) card.classList.add("bio-no-blur");
+}
+
+function stopBioCarousel() {
+  if (bioCarouselTimer) {
+    clearInterval(bioCarouselTimer);
+    bioCarouselTimer = null;
+  }
+}
+
+/* =========================
    OVERLAY open/close
 ========================= */
 function openChannel(href) {
@@ -642,6 +802,9 @@ function openChannel(href) {
     overlayState.slideIndex = 0;
     overlayState.dom = null;
     renderProjectsCarousel();
+  } else if (href === "#about") {
+    overlayBody.innerHTML = data.html || "";
+    setupBioCarousel();
   } else {
     overlayBody.innerHTML = data.html || "";
   }
@@ -666,6 +829,7 @@ function closeChannel() {
 
   closeMore();
   mgStop(false);
+  stopBioCarousel();
 
   overlay.classList.remove("is-open", "is-game", "is-carousel");
   overlay.setAttribute("aria-hidden", "true");
@@ -675,6 +839,25 @@ function closeChannel() {
 
 if (overlayBack) overlayBack.addEventListener("click", closeChannel);
 
+/* =========================
+   Image viewer (full size)
+========================= */
+function openImageViewer(src) {
+  if (!imgViewer || !imgViewerSrc || !src) return;
+  imgViewerSrc.src = src;
+  imgViewer.classList.add("is-open");
+  imgViewer.setAttribute("aria-hidden", "false");
+}
+function closeImageViewer() {
+  if (!imgViewer || !imgViewerSrc) return;
+  imgViewer.classList.remove("is-open");
+  imgViewer.setAttribute("aria-hidden", "true");
+  imgViewerSrc.src = "";
+}
+if (imgViewer) {
+  imgViewer.addEventListener("click", closeImageViewer);
+}
+
 if (overlay) {
   overlay.addEventListener("click", (e) => {
     if (e.target === overlay) closeChannel();
@@ -682,6 +865,10 @@ if (overlay) {
 }
 
 document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && imgViewer?.classList.contains("is-open")) {
+    closeImageViewer();
+    return;
+  }
   if (e.key === "Escape" && overlay?.classList.contains("is-open")) closeChannel();
 });
 
@@ -715,6 +902,23 @@ if (btnRight) {
 
 /* Overlay body events (projects controls + click to close more) */
 overlayBody?.addEventListener("click", (e) => {
+  // Full image viewer: only for Projects carousel
+  if (overlayState.href === "#projects") {
+    const frameEl = e.target?.closest?.("[data-ch-frame]");
+    if (frameEl) {
+      const currentImg = overlayState.dom?.imgs?.find((img) =>
+        img.classList.contains("is-on")
+      );
+      const src = currentImg?.getAttribute("src");
+      if (src) {
+        e.preventDefault();
+        e.stopPropagation();
+        openImageViewer(src);
+        return;
+      }
+    }
+  }
+
   const btn = e.target?.closest?.("[data-ch]");
   const action = btn?.getAttribute("data-ch");
 
