@@ -6,18 +6,34 @@ import "./style.css";
 const ENABLE_PAGES = false; // quando vorrai 2 pagine: metti true
 
 /* =========================
-   UI / GRID
+   DOM
 ========================= */
+const introEl = document.getElementById("wiiIntro");
+let appStarted = false;
 const grid = document.getElementById("grid");
 const boardEl = document.getElementById("board");
 const timeEl = document.getElementById("time");
 const dateEl = document.getElementById("date");
 
-const btnLeft = document.getElementById("btnLeft");   // audio
-const btnRight = document.getElementById("btnRight"); // minigame (controller)
+const btnLeft = document.getElementById("btnLeft"); // audio
+const btnRight = document.getElementById("btnRight"); // minigame
+
+const overlay = document.getElementById("wiiOverlay");
+const overlayBack = document.getElementById("overlayBack");
+const overlayTitle = document.getElementById("overlayTitle");
+const overlayBody = document.getElementById("overlayBody");
+
+const pointerEl = document.getElementById("wiiPointer");
 
 /* =========================
-   DATA
+   HELPERS
+========================= */
+function clamp(n, a, b) {
+  return Math.max(a, Math.min(b, n));
+}
+
+/* =========================
+   DATA (GRID)
 ========================= */
 const pages = [
   [
@@ -58,7 +74,7 @@ function getCurrentItems() {
 }
 
 function renderPage() {
-if (!grid) return;
+  if (!grid) return;
   const items = getCurrentItems();
 
   grid.innerHTML = items
@@ -307,7 +323,11 @@ function startMusic() {
   musicNodes = { musicGain, lp, delay, fb, delayMix, drone, droneGain, lfo, timerId: null };
   step();
 
+<<<<<<< HEAD
   musicGain.gain.setTargetAtTime(0.090, ctx.currentTime, 0.4);
+=======
+  musicGain.gain.setTargetAtTime(0.400, ctx.currentTime, 0.7);
+>>>>>>> db9b183 (Work in progress: overlay + intro + wiggle)
 }
 
 function stopMusic() {
@@ -334,19 +354,20 @@ if (btnLeft) {
     else startMusic();
   });
 }
-
-// icona controller nel bottone destro
 if (btnRight) btnRight.textContent = "🎮";
 
 /* =========================
-   OVERLAY (Channel)
+   OVERLAY: PROJECTS (carousel + more)
 ========================= */
-const overlay = document.getElementById("wiiOverlay");
-const overlayBack = document.getElementById("overlayBack");
-const overlayTitle = document.getElementById("overlayTitle");
-const overlayBody = document.getElementById("overlayBody");
+const overlayState = {
+  href: null,
+  projectIndex: 0,
+  slideIndex: 0,
+  dom: null, // cache carousel nodes
+};
 
 const channelContent = {
+<<<<<<< HEAD
   
 "#projects": {
   title: "Progetti",
@@ -366,6 +387,48 @@ const channelContent = {
     },
   ],
 },
+=======
+  "#projects": {
+    title: "Progetti",
+    projects: [
+      {
+        id: "bestof",
+        slides: [
+          {
+            src: "/img/01.jpg",
+            client: "Selezione",
+            title: "Best of 2024–2026",
+            what: "Riprese, montaggio, delivery social",
+            moreHtml: `
+              <h3 class="chMoreTitle">Best of 2024–2026</h3>
+              <p class="chMoreText">Qui ci metti testo lungo: contesto, obiettivo, ruolo, risultati ecc.</p>
+            `,
+          },
+          {
+            src: "/img/02.jpg",
+            client: "Cliente X",
+            title: "Campagna social",
+            what: "Reel + ads",
+            moreHtml: `
+              <h3 class="chMoreTitle">Campagna social</h3>
+              <p class="chMoreText">Dettagli, metriche, cosa hai fatto tu, timing, output.</p>
+            `,
+          },
+          {
+            src: "/img/03.jpg",
+            client: "Cliente Y",
+            title: "Video promo",
+            what: "Shooting + color + sound",
+            moreHtml: `
+              <h3 class="chMoreTitle">Video promo</h3>
+              <p class="chMoreText">Case study: obiettivo, set, post, consegna finale.</p>
+            `,
+          },
+        ],
+      },
+    ],
+  },
+>>>>>>> db9b183 (Work in progress: overlay + intro + wiggle)
 
   "#videos": {
     title: "Video",
@@ -380,6 +443,7 @@ const channelContent = {
       </div>
     `,
   },
+
   "#about": {
     title: "Chi sono",
     html: `
@@ -393,6 +457,7 @@ const channelContent = {
       </div>
     `,
   },
+
   "#contact": {
     title: "Contatti",
     html: `
@@ -422,7 +487,6 @@ const channelContent = {
         <div class="mgStage">
           <canvas id="mgCanvas" width="900" height="520" style="width:100%; height:auto; display:block;"></canvas>
 
-          <!-- GAME OVER LAYER (DEVE stare DENTRO mgStage) -->
           <div class="mgOver" id="mgOver" aria-hidden="true">
             <div class="mgOverPanel">
               <div class="mgOverTitle">Game Over</div>
@@ -514,32 +578,147 @@ function renderProjectDetail(href) {
 }
 
 
+function renderProjectsCarousel() {
+  if (!overlayBody) return;
+  const data = channelContent["#projects"];
+  const project = data.projects[overlayState.projectIndex] || data.projects[0];
+  const slides = project?.slides || [];
+  if (!slides.length) return;
+
+  overlayState.slideIndex = clamp(overlayState.slideIndex, 0, slides.length - 1);
+
+ overlayBody.innerHTML = `
+  <div class="chCarousel" data-channel="#projects">
+    <div class="chStage">
+      <div class="chFrame" data-ch-frame>
+        ${slides
+          .map(
+            (sl, i) => `
+              <img class="chMedia ${i === overlayState.slideIndex ? "is-on" : ""}"
+                   src="${sl.src}" alt="" loading="lazy" decoding="async">
+            `
+          )
+          .join("")}
+
+        <div class="chMore" aria-hidden="true">
+          <div class="chMoreContent"></div>
+        </div>
+      </div>
+
+      <div class="chCaption">
+        <div class="chClient" data-cap="client"></div>
+        <div class="chTitle" data-cap="title"></div>
+        <div class="chWhat" data-cap="what"></div>
+
+        <div class="chActions">
+          <button class="wii-pill" data-ch="prev" type="button">◀</button>
+          <button class="wii-pill" data-ch="next" type="button">▶</button>
+          <button class="wii-pill" data-ch="more" type="button">Scopri di più</button>
+        </div>
+      </div>
+    </div>
+  </div>
+`;
+
+  const dom = {
+    frame: overlayBody.querySelector("[data-ch-frame]"),
+    imgs: Array.from(overlayBody.querySelectorAll(".chMedia")),
+    more: overlayBody.querySelector(".chMore"),
+    moreContent: overlayBody.querySelector(".chMoreContent"),
+    capClient: overlayBody.querySelector('[data-cap="client"]'),
+    capTitle: overlayBody.querySelector('[data-cap="title"]'),
+    capWhat: overlayBody.querySelector('[data-cap="what"]'),
+  };
+  overlayState.dom = dom;
+
+  applyProjectSlideUI(slides, overlayState.slideIndex);
+  const btnMore = overlayBody.querySelector('[data-ch="more"]');
+if (btnMore) btnMore.textContent = "Scopri di più";
+
+}
+
+function applyProjectSlideUI(slides, idx) {
+  const sl = slides[idx];
+  const dom = overlayState.dom;
+  if (!sl || !dom) return;
+
+  if (dom.capClient) dom.capClient.textContent = sl.client || "";
+  if (dom.capTitle) dom.capTitle.textContent = sl.title || "";
+  if (dom.capWhat) dom.capWhat.textContent = sl.what || "";
+
+  if (dom.moreContent) dom.moreContent.innerHTML = sl.moreHtml || "";
+}
+
+function isMoreOpen() {
+  return !!overlayState.dom?.frame?.classList.contains("is-more");
+}
+
+function openMore(slides) {
+  const dom = overlayState.dom;
+  if (!dom?.frame || !dom?.more) return;
+
+  dom.frame.classList.add("is-more"); // questa classe triggera il blur (CSS)
+  dom.more.classList.add("is-open");
+  dom.more.setAttribute("aria-hidden", "false");
+  applyProjectSlideUI(slides, overlayState.slideIndex);
+}
+
+function closeMore() {
+  const dom = overlayState.dom;
+  if (!dom?.frame || !dom?.more) return;
+
+  dom.frame.classList.remove("is-more");
+  dom.more.classList.remove("is-open");
+  dom.more.setAttribute("aria-hidden", "true");
+}
+
+/* =========================
+   OVERLAY open/close
+========================= */
 function openChannel(href) {
   if (!overlay || !overlayTitle || !overlayBody) return;
 
-  // opzionale: classe utile se vuoi cambiare padding/stile quando è minigame
+  overlayState.href = href;
+
+  // reset overlay mode classes
   overlay.classList.toggle("is-game", href === "#minigame");
+<<<<<<< HEAD
   // stato per canali “a carosello”
   chState.href = href;
   chState.index = 0;
   chState.mode = "carousel";
+=======
+  overlay.classList.toggle("is-carousel", href === "#projects");
+
+>>>>>>> db9b183 (Work in progress: overlay + intro + wiggle)
   const data = channelContent[href] || {
     title: "Canale",
     html: `<div class="wii-card"><h3>Coming soon</h3><p>Contenuto in arrivo.</p></div>`,
   };
 
   overlayTitle.textContent = data.title;
+<<<<<<< HEAD
   overlayBody.innerHTML = data.html;
   // Se il canale ha "projects", renderizza il carosello al posto di html statico
   if (channelContent[href]?.projects) {
     overlayTitle.textContent = channelContent[href].title;
     renderChannelCarousel(href);
+=======
+
+  // Projects carousel
+  if (href === "#projects" && data.projects) {
+    overlayState.projectIndex = 0;
+    overlayState.slideIndex = 0;
+    overlayState.dom = null;
+    renderProjectsCarousel();
+  } else {
+    overlayBody.innerHTML = data.html || "";
+>>>>>>> db9b183 (Work in progress: overlay + intro + wiggle)
   }
 
   overlay.classList.add("is-open");
   overlay.setAttribute("aria-hidden", "false");
 
-  // init minigame solo quando serve
   if (href === "#minigame") {
     requestAnimationFrame(() => {
       const ok = mgSetupDom();
@@ -554,11 +733,17 @@ function openChannel(href) {
 
 function closeChannel() {
   if (!overlay) return;
+<<<<<<< HEAD
   stopOverlayAutoSlides();
+=======
+
+  closeMore();
+>>>>>>> db9b183 (Work in progress: overlay + intro + wiggle)
   mgStop(false);
-  overlay.classList.remove("is-open");
-  overlay.classList.remove("is-game");
+
+  overlay.classList.remove("is-open", "is-game", "is-carousel");
   overlay.setAttribute("aria-hidden", "true");
+
   clickSound();
 }
 // =========================
@@ -641,6 +826,7 @@ overlayBody?.addEventListener("click", (e) => {
 
 /* click tile -> overlay */
 document.addEventListener("click", (e) => {
+  if (!appStarted) return;
   if (ENABLE_PAGES && performance.now() < suppressClickUntil) {
     e.preventDefault();
     e.stopPropagation();
@@ -657,13 +843,77 @@ document.addEventListener("click", (e) => {
   }
 });
 
-/* btnRight: apri minigame */
+/* btnRight: minigame */
 if (btnRight) {
   btnRight.addEventListener("click", (e) => {
+    if (!appStarted) return;
     e.preventDefault();
     openChannel("#minigame");
   });
 }
+
+/* Overlay body events (projects controls + click to close more) */
+overlayBody?.addEventListener("click", (e) => {
+  const btn = e.target?.closest?.("[data-ch]");
+  const action = btn?.getAttribute("data-ch");
+
+  // click sul frame mentre "more" è aperto -> chiudi (ma NON se clicchi sui bottoni)
+  const frame = e.target?.closest?.("[data-ch-frame]");
+  if (frame && isMoreOpen() && !btn) {
+    closeMore();
+    const btnMore = overlayBody.querySelector('[data-ch="more"]');
+    if (btnMore) btnMore.textContent = "Scopri di più";
+    return;
+  }
+
+  // se non è un bottone del carousel, fine
+  if (!action) return;
+
+  // solo projects
+  if (overlayState.href !== "#projects") return;
+
+  const data = channelContent["#projects"];
+  const project = data.projects[overlayState.projectIndex] || data.projects[0];
+  const slides = project?.slides || [];
+  if (!slides.length) return;
+
+  // TOGGLE sullo stesso bottone
+  if (action === "more") {
+    if (isMoreOpen()) {
+      closeMore();
+      btn.textContent = "Scopri di più";
+    } else {
+      openMore(slides);
+      btn.textContent = "Chiudi";
+    }
+    return;
+  }
+
+  // se navighi (prev/next) mentre "more" è aperto, chiudilo e resetta testo
+  if (action === "prev" || action === "next") {
+    if (isMoreOpen()) {
+      closeMore();
+      const btnMore = overlayBody.querySelector('[data-ch="more"]');
+      if (btnMore) btnMore.textContent = "Scopri di più";
+    }
+
+    if (action === "prev") {
+      overlayState.slideIndex =
+        (overlayState.slideIndex - 1 + slides.length) % slides.length;
+    } else {
+      overlayState.slideIndex =
+        (overlayState.slideIndex + 1) % slides.length;
+    }
+
+    // update media + caption
+    overlayState.dom?.imgs?.forEach((img, i) =>
+      img.classList.toggle("is-on", i === overlayState.slideIndex)
+    );
+    applyProjectSlideUI(slides, overlayState.slideIndex);
+    return;
+  }
+});
+
 
 /* =========================
    PAGES (ready for later)
@@ -728,12 +978,11 @@ if (ENABLE_PAGES && boardEl) {
 /* =========================
    POINTER (Wii cursor)
 ========================= */
-const pointerEl = document.getElementById("wiiPointer");
-
 let tx = 0, ty = 0;
 let cx = 0, cy = 0;
 let visible = false;
 let lastPointerType = "mouse";
+let currentHoverEl = null;
 
 function showPointer() {
   if (!pointerEl) return;
@@ -774,7 +1023,6 @@ window.addEventListener("pointermove", (e) => {
 window.addEventListener("mouseleave", () => hidePointer());
 
 const hoverSelector = ".wii-tile, .wii-pill";
-let currentHoverEl = null;
 
 function setHover(on) {
   if (!pointerEl) return;
@@ -804,7 +1052,6 @@ document.addEventListener("pointerout", (e) => {
   }
 });
 
-// click feedback + start music on first interaction
 document.addEventListener("pointerdown", () => {
   if (audioEnabled) startMusic();
   if (!pointerEl || lastPointerType !== "mouse") return;
@@ -819,6 +1066,7 @@ document.addEventListener("pointerup", () => {
 
 /* =========================
    MINIGAME: Bubble Pop
+   (il tuo codice invariato)
 ========================= */
 let mg = {
   running: false,
@@ -844,7 +1092,6 @@ function mgHideGameOver() {
   mg.overEl.classList.remove("is-show");
   mg.overEl.setAttribute("aria-hidden", "true");
 }
-
 function mgShowGameOver() {
   if (!mg.overEl) return;
   if (mg.overScoreEl) mg.overScoreEl.textContent = String(mg.score);
@@ -880,7 +1127,6 @@ function mgSetupDom() {
     mg.overCloseBtn.onclick = () => closeChannel();
   }
 
-  // click canvas = pop
   mg.canvas.onpointerdown = (e) => {
     if (!mg.running) return;
 
@@ -939,8 +1185,6 @@ function mgReset() {
 
 function mgStart() {
   if (mg.running) return;
-
-  // se sei già “finito”, riparti pulito
   if (mg.timeLeft <= 0) mgReset();
 
   mgHideGameOver();
@@ -956,7 +1200,7 @@ function mgStart() {
     if (mg.timeLeft <= 0) {
       mg.timeLeft = 0;
       if (mg.timeEl) mg.timeEl.textContent = "0";
-      mgStop(true); // game over
+      mgStop(true);
     }
   }, 1000);
 
@@ -1121,11 +1365,59 @@ function mgGameOverSound() {
 window.addEventListener("resize", () => {
   if (document.getElementById("mgCanvas")) mgResizeCanvasForHiDpi();
 });
+function startApp() {
+  if (appStarted) return;
+  appStarted = true;
 
+  // chiudi intro
+  if (introEl) {
+    introEl.classList.add("is-hidden");
+    introEl.setAttribute("aria-hidden", "true");
+  }
+
+  // audio: se vuoi far partire subito la musica al “click per iniziare”
+  // (se preferisci che la musica parta solo col tuo bottone 🔊, commenta queste 2 righe)
+  if (audioEnabled) {
+    ensureAudio();
+    startMusic();
+  }
+
+  clickSound();
+}
+
+function bindIntro() {
+  if (!introEl) {
+    appStarted = true;
+    return;
+  }
+
+  // click/tap ovunque sull’intro
+  introEl.addEventListener("click", (e) => {
+    e.preventDefault();
+    startApp();
+  });
+
+  // tastiera: Enter / Space
+  window.addEventListener("keydown", (e) => {
+    if (appStarted) return;
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      startApp();
+    }
+  });
+}
 /* =========================
    INIT
 ========================= */
 renderPage();
 if (grid) grid.classList.add("is-swoosh-in");
+
 tickClock();
 setInterval(tickClock, 1000);
+bindIntro();
+renderPage();
+if (grid) grid.classList.add("is-swoosh-in");
+tickClock();
+setInterval(tickClock, 1000);
+bindIntro();
+

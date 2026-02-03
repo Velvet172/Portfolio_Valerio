@@ -712,3 +712,296 @@ body{
 
   .wii-tileContent{ padding: 14px; }
 }
+/* =========================
+   Overlay: PROJECTS CAROUSEL
+   (compatibile con main.js nuovo)
+========================= */
+
+.wii-overlay.is-carousel .wii-overlayBody{
+  padding: 14px;
+  overflow: hidden; /* niente scroll nel carosello */
+}
+
+/* struttura generale */
+.chCarousel{
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr;
+  min-height: 0;
+}
+
+.chStage{
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 12px;
+  min-height: 0;
+}
+
+/* frame immagine */
+.chFrame{
+  position: relative;
+  border-radius: 26px;
+  overflow: hidden; /* taglia blur + overlay ai bordi */
+  border: 1px solid rgba(20,30,50,.12);
+  background: rgba(255,255,255,.55);
+  box-shadow: 0 16px 34px rgba(0,0,0,.10);
+  min-height: 0;
+}
+
+/* immagini (fade) */
+.chMedia{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  opacity: 0;
+  transform: translateZ(0) scale(1.02);
+  transition: opacity 220ms ease, transform 320ms ease, filter 220ms ease;
+  will-change: opacity, transform, filter;
+  backface-visibility: hidden;
+}
+
+.chMedia.is-on{
+  opacity: 1;
+  transform: translateZ(0) scale(1);
+}
+
+/* BLUR SOLO sulla slide attiva quando "more" è aperto */
+.chFrame.is-more .chMedia.is-on{
+  filter: blur(7px) saturate(1.05);
+  transform: translateZ(0) scale(1.03);
+}
+
+/* caption sotto */
+.chCaption{
+  display: grid;
+  gap: 2px;
+  color: rgba(26,36,51,.78);
+  padding: 2px 2px 0;
+}
+
+.chClient{ font-weight: 900; opacity: .62; }
+.chTitle{ font-weight: 900; font-size: 24px; line-height: 1.1; }
+.chWhat{ font-weight: 800; opacity: .72; }
+
+/* bottoni azione */
+.chActions{
+  display:flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+/* =========================
+   "Scopri di più" (testo sopra frame)
+   - NO backdrop-filter (evita artefatti)
+========================= */
+
+.chMore{
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+
+  border-radius: inherit;
+  overflow: hidden;
+}
+
+/* JS usa .is-open sul layer */
+.chMore.is-open{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* velo leggero sopra la foto (senza blur qui) */
+.chMore::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  /* velatura CHIARA più forte */
+  background: rgba(255,255,255,.70);
+}
+
+/* contenuto testo */
+.chMoreContent{
+  position: relative;
+  z-index: 2;
+  padding: 22px;
+  color: rgba(26,36,51,.86);
+  font-size: 18px;
+  line-height: 1.35;
+}
+
+/* opzionale: cursore click sul frame quando "more" è aperto */
+.chFrame.is-more{
+  cursor: pointer;
+}
+/* =========================
+   Intro screen (Click to start)
+========================= */
+
+.wii-intro{
+  position: fixed;
+  inset: 0;
+  z-index: 10000; /* sopra pointer e overlay */
+  display: grid;
+  place-items: center;
+  background: rgba(10,16,24,.28);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 260ms ease;
+}
+
+.wii-intro.is-hidden{
+  opacity: 0;
+  pointer-events: none;
+}
+
+.wii-introPanel{
+  width: min(720px, calc(100vw - 28px));
+  border-radius: 34px;
+  border: 1px solid rgba(20,30,50,.14);
+  background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.68));
+  box-shadow: 0 30px 90px rgba(0,0,0,.22);
+  padding: 22px 22px 18px;
+  text-align: center;
+
+  transform: translateY(10px) scale(0.985);
+  transition: transform 260ms cubic-bezier(.2,.9,.2,1);
+}
+
+.wii-intro.is-hidden .wii-introPanel{
+  transform: translateY(18px) scale(0.98);
+}
+
+.wii-introLogo{
+  font-weight: 900;
+  letter-spacing: .4px;
+  font-size: 34px;
+  color: rgba(26,36,51,.76);
+  text-shadow: 0 1px 0 rgba(255,255,255,.85);
+}
+
+.wii-introHint{
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 900;
+  font-size: 22px;
+  color: rgba(26,36,51,.70);
+}
+
+.wii-introA{
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+
+  border: 1px solid rgba(60,180,255,.30);
+  background: linear-gradient(180deg, rgba(60,180,255,.22), rgba(60,180,255,.08));
+  box-shadow: 0 14px 26px rgba(0,0,0,.10);
+}
+
+.wii-introSub{
+  margin-top: 8px;
+  font-weight: 800;
+  font-size: 14px;
+  color: rgba(26,36,51,.55);
+}
+
+/* micro “pulse” sul testo */
+@keyframes wiiIntroPulse{
+  0%, 100% { transform: translateY(0); opacity: .92; }
+  50%      { transform: translateY(-2px); opacity: 1; }
+}
+
+.wii-introHint{
+  animation: wiiIntroPulse 1.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .wii-introHint{ animation: none; }
+}
+.wii-introCursor{
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  display: inline-block;
+
+  border: 1px solid rgba(60,180,255,.30);
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255,255,255,.92), rgba(255,255,255,.55)),
+    linear-gradient(180deg, rgba(60,180,255,.18), rgba(60,180,255,.06));
+
+  box-shadow: 0 14px 26px rgba(0,0,0,.10);
+
+  /* il cursore */
+  position: relative;
+}
+
+.wii-introCursor::after{
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+
+  width: 26px;
+  height: 26px;
+
+  background: url("/pointer.svg") center / contain no-repeat;
+  opacity: .92;
+
+  /* centrato + rotazione 45° */
+  transform: translate(-50%, -50%) rotate(45deg);
+  transform-origin: center;
+}
+@keyframes wiiWiggle{
+  0%   { transform: translateY(0) rotate(0deg); }
+  15%  { transform: translateY(-1px) rotate(-1.2deg); }
+  30%  { transform: translateY(0) rotate(1.2deg); }
+  45%  { transform: translateY(-1px) rotate(-0.8deg); }
+  60%  { transform: translateY(0) rotate(0.8deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+/* WIGGLE CONTINUO su hover */
+.wii-tile:hover .wii-tileContent{
+  transform-origin: center;
+  animation: wiiWiggle 900ms ease-in-out infinite;
+}
+
+/* opzionale: anche l’icona (leggermente diverso per non sembrare “incollata”) */
+.wii-tile:hover .wii-icon{
+  transform-origin: center;
+  animation: wiiWiggle 1100ms ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .wii-tile:hover .wii-tileContent,
+  .wii-tile:hover .wii-icon{
+    animation: none;
+  }
+}
+.wii-tile:hover .wii-tileContent,
+.wii-tile:hover .wii-icon{
+  animation-delay: 60ms;
+}
+
+.wii-tile:active .wii-tileContent,
+.wii-tile:active .wii-icon{
+  animation: none;
+}
+
