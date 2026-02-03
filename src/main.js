@@ -1284,6 +1284,9 @@ function applyAutoScale() {
   const shell = document.querySelector(".wii-shell");
   if (!shell) return;
 
+  const isCoarse = window.matchMedia?.("(pointer: coarse)")?.matches ?? false;
+  const enableAutoscale = isCoarse;
+
   const rootStyles = getComputedStyle(document.documentElement);
   const shellW = parseFloat(rootStyles.getPropertyValue("--shellW")) || 1400;
   const shellH = parseFloat(rootStyles.getPropertyValue("--shellH")) || 900;
@@ -1295,6 +1298,12 @@ function applyAutoScale() {
 
   const availW = Math.max(0, vw - outer);
   const availH = Math.max(0, vh - outer);
+
+  if (!enableAutoscale) {
+    shell.style.setProperty("--ui-scale", "1");
+    shell.classList.remove("is-autoscale");
+    return;
+  }
 
   const scale = Math.min(availW / shellW, availH / shellH, 1);
   shell.style.setProperty("--ui-scale", scale.toFixed(3));

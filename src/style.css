@@ -40,6 +40,7 @@ body{
   overflow: hidden;
 }
 
+
 /* =========================
    Shell layout: Header / Board / Footer
 ========================= */
@@ -64,6 +65,7 @@ body{
 .wii-shell.is-autoscale{
   width: var(--shellW);
   height: var(--shellH);
+  transform-origin: top center;
 }
 
 /* viewport units più affidabili su mobile */
@@ -747,8 +749,6 @@ body{
 @media (max-width: 640px){
   :root{ --outer: 14px; --gap: 8px; }
 
-  body{ place-items: start center; }
-
   .wii-h1{ font-size: 16px; letter-spacing: .4px; }
   .wii-time{ font-size: 24px; }
   .wii-date{ font-size: 12px; }
@@ -770,6 +770,10 @@ body{
   .wii-bar{ padding: 8px 10px; }
   .wii-pill{ height: 36px; min-width: 70px; padding: 0 12px; }
   .wii-clock{ min-width: 120px; }
+}
+
+@media (max-width: 640px) and (pointer: coarse){
+  body{ place-items: start center; }
 }
 
 @media (max-width: 380px), (max-height: 700px){
