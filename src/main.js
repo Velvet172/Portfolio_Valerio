@@ -95,7 +95,7 @@ function renderPage() {
           ${previewHtml}
           <div class="wii-tileContent">
             <div class="wii-icon">${x.icon}</div>
-            <div>
+            <div class="wii-tileText">
               <div class="wii-title">${x.t}</div>
               <div class="wii-sub">${x.s}</div>
             </div>
@@ -130,6 +130,7 @@ function tickClock() {
 ========================= */
 let audioCtx = null;
 let audioEnabled = true;
+let audioUnlocked = false;
 let lastHoverSoundAt = 0;
 
 function ensureAudio() {
@@ -153,6 +154,12 @@ function unlockAudio() {
     src.connect(ctx.destination);
     src.start(0);
   } catch {}
+}
+
+function unlockAudioOnce() {
+  if (audioUnlocked) return;
+  audioUnlocked = true;
+  unlockAudio();
 }
 
 function beep({ type = "sine", freq = 700, duration = 0.05, gain = 0.04, attack = 0.002, release = 0.035 } = {}) {
@@ -366,12 +373,27 @@ if (btnLeft) {
     btnLeft.textContent = audioEnabled ? "🔊" : "🔇";
     if (!audioEnabled) stopMusic();
     else {
+      unlockAudioOnce();
       unlockAudio();
       startMusic();
+      clickSound();
     }
   });
 }
 if (btnRight) btnRight.textContent = "🎮";
+
+/* sblocca audio al primo gesto utente (iOS/Safari) */
+["pointerdown", "touchstart", "mousedown"].forEach((evt) => {
+  window.addEventListener(
+    evt,
+    () => {
+      if (!audioEnabled) return;
+      unlockAudioOnce();
+      startMusic();
+    },
+    { once: true, passive: true }
+  );
+});
 
 /* =========================
    OVERLAY: PROJECTS (carousel + more)
@@ -893,6 +915,7 @@ document.addEventListener("pointerout", (e) => {
 
 document.addEventListener("pointerdown", () => {
   if (audioEnabled) {
+    unlockAudioOnce();
     unlockAudio();
     startMusic();
   }
@@ -1220,6 +1243,7 @@ function startApp() {
   // audio: se vuoi far partire subito la musica al “click per iniziare”
   // (se preferisci che la musica parta solo col tuo bottone 🔊, commenta queste 2 righe)
   if (audioEnabled) {
+    unlockAudioOnce();
     unlockAudio();
     startMusic();
   }

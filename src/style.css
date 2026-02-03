@@ -223,8 +223,13 @@ body{
   height: 100%;
 }
 /* FIX iOS: evita testo tagliato dentro flex */
-.wii-tileContent > div{
+.wii-tileContent > div{ min-width: 0; }
+
+.wii-tileText{
   min-width: 0;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .wii-title,
@@ -250,12 +255,20 @@ body{
   font-size: 15px;
   letter-spacing: .2px;
   line-height: 1.1;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .wii-sub{
   margin-top: 4px;
   font-size: 12px;
   color: var(--muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* =========================
@@ -722,23 +735,43 @@ body{
 }
 
 @media (max-width: 640px){
-  :root{ --outer: 20px; }
+  :root{ --outer: 14px; --gap: 8px; }
 
-  .wii-h1{ font-size: 18px; }
-  .wii-time{ font-size: 30px; }
-  .wii-shell{ gap: 12px; }
-  .wii-board{ padding: 10px; }
+  body{ place-items: start center; }
+
+  .wii-h1{ font-size: 16px; letter-spacing: .4px; }
+  .wii-time{ font-size: 24px; }
+  .wii-date{ font-size: 12px; }
+
+  .wii-shell{ gap: 10px; padding: 10px 10px calc(10px + env(safe-area-inset-bottom)); }
+  .wii-header{ padding: 4px 8px; }
+  .wii-board{ padding: 8px; border-radius: 30px; }
 
   .wii-grid{
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-rows: repeat(6, minmax(0, 1fr));
-    gap: 10px;
   }
 
-  .wii-tileContent{ padding: 14px; }
-  .wii-icon{ width: 40px; height: 40px; font-size: 18px; border-radius: 14px; }
-  .wii-title{ font-size: 14px; }
-  .wii-sub{ font-size: 11px; }
+  .wii-tileContent{ padding: 10px; gap: 8px; }
+  .wii-icon{ width: 36px; height: 36px; font-size: 17px; border-radius: 12px; }
+  .wii-title{ font-size: 13px; }
+  .wii-sub{ font-size: 10.5px; margin-top: 3px; }
+
+  .wii-bar{ padding: 8px 10px; }
+  .wii-pill{ height: 36px; min-width: 70px; padding: 0 12px; }
+  .wii-clock{ min-width: 120px; }
+}
+
+@media (max-width: 380px), (max-height: 700px){
+  :root{ --outer: 10px; --gap: 6px; }
+  .wii-shell{ gap: 8px; }
+  .wii-h1{ font-size: 15px; }
+  .wii-time{ font-size: 22px; }
+  .wii-tileContent{ padding: 8px; }
+  .wii-icon{ width: 34px; height: 34px; font-size: 16px; }
+  .wii-title{ font-size: 12.5px; }
+  .wii-sub{ font-size: 10px; }
+  .wii-pill{ height: 34px; min-width: 64px; }
 }
 /* =========================
    Overlay: PROJECTS CAROUSEL
