@@ -53,11 +53,6 @@ body{
   --ui-scale: 1;
 }
 
-.wii-shell.is-autoscale{
-  width: calc(var(--shellW) * var(--ui-scale));
-  height: calc(var(--shellH) * var(--ui-scale));
-}
-
 .wii-shellInner{
   width: 100%;
   height: 100%;
@@ -67,11 +62,7 @@ body{
   display: grid;
   grid-template-rows: auto 1fr auto;
   gap: 18px;
-}
 
-.wii-shell.is-autoscale .wii-shellInner{
-  width: var(--shellW);
-  height: var(--shellH);
   transform: scale(var(--ui-scale));
   transform-origin: top left;
   will-change: transform;
@@ -779,10 +770,6 @@ body{
   .wii-bar{ padding: 8px 10px; }
   .wii-pill{ height: 36px; min-width: 70px; padding: 0 12px; }
   .wii-clock{ min-width: 120px; }
-}
-
-@media (max-width: 640px) and (pointer: coarse){
-  body{ place-items: start center; }
 }
 
 @media (max-width: 380px), (max-height: 700px){

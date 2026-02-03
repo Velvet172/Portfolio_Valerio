@@ -1282,14 +1282,27 @@ function bindIntro() {
 ========================= */
 function applyAutoScale() {
   const shell = document.querySelector(".wii-shell");
-  if (!shell) return;
+  const inner = shell?.querySelector(".wii-shellInner");
+  if (!shell || !inner) return;
 
   const isCoarse = window.matchMedia?.("(pointer: coarse)")?.matches ?? false;
   const enableAutoscale = isCoarse;
 
+  if (!enableAutoscale) {
+    shell.style.setProperty("--ui-scale", "1");
+    shell.style.removeProperty("width");
+    shell.style.removeProperty("height");
+    shell.classList.remove("is-autoscale");
+    return;
+  }
+
+  // reset to natural size before measuring
+  shell.style.setProperty("--ui-scale", "1");
+  shell.style.removeProperty("width");
+  shell.style.removeProperty("height");
+  shell.classList.remove("is-autoscale");
+
   const rootStyles = getComputedStyle(document.documentElement);
-  const shellW = parseFloat(rootStyles.getPropertyValue("--shellW")) || 1400;
-  const shellH = parseFloat(rootStyles.getPropertyValue("--shellH")) || 900;
   const outer = parseFloat(rootStyles.getPropertyValue("--outer")) || 28;
 
   const vv = window.visualViewport;
@@ -1299,15 +1312,18 @@ function applyAutoScale() {
   const availW = Math.max(0, vw - outer);
   const availH = Math.max(0, vh - outer);
 
-  if (!enableAutoscale) {
-    shell.style.setProperty("--ui-scale", "1");
-    shell.classList.remove("is-autoscale");
-    return;
-  }
+  const rect = inner.getBoundingClientRect();
+  const naturalW = rect.width || availW;
+  const naturalH = rect.height || availH;
 
-  const scale = Math.min(availW / shellW, availH / shellH, 1);
-  shell.style.setProperty("--ui-scale", scale.toFixed(3));
-  shell.classList.toggle("is-autoscale", scale < 0.995);
+  const scale = Math.min(availW / naturalW, availH / naturalH, 1);
+  const scaledW = Math.max(1, Math.round(naturalW * scale));
+  const scaledH = Math.max(1, Math.round(naturalH * scale));
+
+  shell.style.setProperty("--ui-scale", scale.toFixed(4));
+  shell.style.width = `${scaledW}px`;
+  shell.style.height = `${scaledH}px`;
+  shell.classList.toggle("is-autoscale", scale < 0.999);
 }
 /* =========================
    INIT
