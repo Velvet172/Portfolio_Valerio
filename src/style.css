@@ -47,7 +47,7 @@ body{
 
 .wii-shell{
   width: min(var(--shellW), calc(100vw - var(--outer)));
-  height: min(var(--shellH), calc(100vh - var(--outer)));
+  height: min(var(--shellH), calc(var(--vh, 100vh) - var(--outer)));
   margin: 0;
 
   padding: 14px 14px 13px;
@@ -58,17 +58,6 @@ body{
   gap: 18px;
 }
 
-/* viewport units più affidabili su mobile */
-@supports (height: 100svh){
-  .wii-shell{
-    height: min(var(--shellH), calc(100svh - var(--outer)));
-  }
-}
-@supports (height: 100dvh){
-  .wii-shell{
-    height: min(var(--shellH), calc(100dvh - var(--outer)));
-  }
-}
 
 /* Header */
 .wii-header{

@@ -1278,6 +1278,14 @@ function bindIntro() {
 }
 
 /* =========================
+   Viewport height fix (iOS/embedded browsers)
+========================= */
+function setViewportUnit() {
+  const vh = window.visualViewport?.height || window.innerHeight;
+  document.documentElement.style.setProperty("--vh", `${vh}px`);
+}
+
+/* =========================
    INIT
 ========================= */
 renderPage();
@@ -1286,3 +1294,7 @@ if (grid) grid.classList.add("is-swoosh-in");
 tickClock();
 setInterval(tickClock, 1000);
 bindIntro();
+
+setViewportUnit();
+window.addEventListener("resize", setViewportUnit);
+window.visualViewport?.addEventListener("resize", setViewportUnit);
