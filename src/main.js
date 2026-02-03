@@ -42,7 +42,7 @@ const pages = [
       t: "Progetti",
       s: "Case study e lavori",
       href: "#projects",
-      previews: ["img/01.jpg", "img/02.jpg", "img/03.jpg"],
+      previews: ["/img/01.jpg", "/img/02.jpg", "/img/03.jpg"],
     },
     { icon: "🎬", t: "Video", s: "Reel e underwater", href: "#videos" },
     { icon: "👋", t: "Chi sono", s: "Bio + competenze", href: "#about" },
@@ -163,7 +163,7 @@ function hoverSound() {
   const now = performance.now();
   if (now - lastHoverSoundAt < 120) return;
   lastHoverSoundAt = now;
-  beep({ type: "sine", freq: 880, duration: 0.03, gain: 0.012, attack: 0.002, release: 0.03 });
+  beep({ type: "sine", freq: 880, duration: 0.03, gain: 0.026, attack: 0.002, release: 0.03 });
 }
 
 function clickSound() {
@@ -323,11 +323,7 @@ function startMusic() {
   musicNodes = { musicGain, lp, delay, fb, delayMix, drone, droneGain, lfo, timerId: null };
   step();
 
-<<<<<<< HEAD
-  musicGain.gain.setTargetAtTime(0.090, ctx.currentTime, 0.4);
-=======
   musicGain.gain.setTargetAtTime(0.400, ctx.currentTime, 0.7);
->>>>>>> db9b183 (Work in progress: overlay + intro + wiggle)
 }
 
 function stopMusic() {
@@ -367,27 +363,6 @@ const overlayState = {
 };
 
 const channelContent = {
-<<<<<<< HEAD
-  
-"#projects": {
-  title: "Progetti",
-  projects: [
-    {
-      id: "projects-hero",
-      client: "Selezione",
-      title: "Best of 2024–2026",
-      what: "Riprese, montaggio, delivery social",
-      media: ["img/01.jpg", "img/02.jpg", "img/03.jpg"], // usa le tue 3
-      detailsHtml: `
-        <div class="wii-card">
-          <h3>Dettagli progetto</h3>
-          <p>Qui metterai descrizione completa, contesto, output, link, ecc.</p>
-        </div>
-      `,
-    },
-  ],
-},
-=======
   "#projects": {
     title: "Progetti",
     projects: [
@@ -428,7 +403,6 @@ const channelContent = {
       },
     ],
   },
->>>>>>> db9b183 (Work in progress: overlay + intro + wiggle)
 
   "#videos": {
     title: "Video",
@@ -505,78 +479,6 @@ const channelContent = {
     `,
   },
 };
-// =========================
-// CHANNEL: Projects carousel state
-// =========================
-let chState = { href: null, index: 0, mode: "carousel" };
-
-function renderChannelCarousel(href) {
-  const data = channelContent[href];
-  if (!data?.projects?.length) return;
-
-  const p = data.projects[chState.index];
-  const slides = Array.isArray(p.media) ? p.media : [];
-
-  overlayBody.innerHTML = `
-    <div class="chCarousel" data-channel="${href}">
-      <div class="chStage">
-        <div class="chSlides">
-          ${slides
-            .map(
-              (src, i) => `
-            <img class="chMedia ${i === 0 ? "is-on" : ""}" src="${src}" alt="" loading="lazy" decoding="async">
-          `
-            )
-            .join("")}
-        </div>
-
-        <div class="chCaption">
-          <div class="chClient">${p.client || ""}</div>
-          <div class="chTitle">${p.title || ""}</div>
-          <div class="chWhat">${p.what || ""}</div>
-
-          <div class="chActions">
-            <button class="wii-pill" data-ch="prev" type="button">◀</button>
-            <button class="wii-pill" data-ch="next" type="button">▶</button>
-            <button class="wii-pill" data-ch="more" type="button">Scopri di più</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="chDots">
-        ${slides
-          .map(
-            (_, i) => `
-          <button class="chDot ${i === 0 ? "is-on" : ""}" data-ch="go" data-i="${i}" aria-label="Slide ${
-              i + 1
-            }"></button>
-        `
-          )
-          .join("")}
-      </div>
-    </div>
-  `;
-
-  startOverlayAutoSlides();
-}
-
-function renderProjectDetail(href) {
-  const data = channelContent[href];
-  const p = data.projects[chState.index];
-
-  overlayBody.innerHTML = `
-    <div class="chDetail">
-      <button class="wii-pill" data-ch="back" type="button">← Torna</button>
-      ${
-        p.detailsHtml ||
-        `<div class="wii-card"><h3>${p.title || "Dettagli"}</h3><p>Coming soon</p></div>`
-      }
-    </div>
-  `;
-
-  stopOverlayAutoSlides();
-}
-
 
 function renderProjectsCarousel() {
   if (!overlayBody) return;
@@ -682,28 +584,14 @@ function openChannel(href) {
 
   // reset overlay mode classes
   overlay.classList.toggle("is-game", href === "#minigame");
-<<<<<<< HEAD
-  // stato per canali “a carosello”
-  chState.href = href;
-  chState.index = 0;
-  chState.mode = "carousel";
-=======
   overlay.classList.toggle("is-carousel", href === "#projects");
 
->>>>>>> db9b183 (Work in progress: overlay + intro + wiggle)
   const data = channelContent[href] || {
     title: "Canale",
     html: `<div class="wii-card"><h3>Coming soon</h3><p>Contenuto in arrivo.</p></div>`,
   };
 
   overlayTitle.textContent = data.title;
-<<<<<<< HEAD
-  overlayBody.innerHTML = data.html;
-  // Se il canale ha "projects", renderizza il carosello al posto di html statico
-  if (channelContent[href]?.projects) {
-    overlayTitle.textContent = channelContent[href].title;
-    renderChannelCarousel(href);
-=======
 
   // Projects carousel
   if (href === "#projects" && data.projects) {
@@ -713,7 +601,6 @@ function openChannel(href) {
     renderProjectsCarousel();
   } else {
     overlayBody.innerHTML = data.html || "";
->>>>>>> db9b183 (Work in progress: overlay + intro + wiggle)
   }
 
   overlay.classList.add("is-open");
@@ -733,41 +620,14 @@ function openChannel(href) {
 
 function closeChannel() {
   if (!overlay) return;
-<<<<<<< HEAD
-  stopOverlayAutoSlides();
-=======
 
   closeMore();
->>>>>>> db9b183 (Work in progress: overlay + intro + wiggle)
   mgStop(false);
 
   overlay.classList.remove("is-open", "is-game", "is-carousel");
   overlay.setAttribute("aria-hidden", "true");
 
   clickSound();
-}
-// =========================
-// Overlay carousel auto-slide
-// =========================
-let overlaySlideTimer = null;
-
-function startOverlayAutoSlides() {
-  stopOverlayAutoSlides();
-  overlaySlideTimer = setInterval(() => {
-    const nextBtn = overlayBody?.querySelector('[data-ch="next"]');
-    if (nextBtn) nextBtn.click();
-  }, 2600);
-}
-
-function stopOverlayAutoSlides() {
-  if (overlaySlideTimer) {
-    clearInterval(overlaySlideTimer);
-    overlaySlideTimer = null;
-  }
-}
-
-function resetOverlayAutoSlides() {
-  startOverlayAutoSlides();
 }
 
 if (overlayBack) overlayBack.addEventListener("click", closeChannel);
@@ -780,48 +640,6 @@ if (overlay) {
 
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && overlay?.classList.contains("is-open")) closeChannel();
-});
-// =========================
-// Carousel controls in overlay body
-// =========================
-overlayBody?.addEventListener("click", (e) => {
-  const btn = e.target.closest("[data-ch]");
-  if (!btn) return;
-
-  const action = btn.getAttribute("data-ch");
-  const data = channelContent[chState.href];
-  if (!data?.projects?.length) return;
-
-  if (action === "more") {
-    chState.mode = "detail";
-    renderProjectDetail(chState.href);
-    return;
-  }
-
-  if (action === "back") {
-    chState.mode = "carousel";
-    renderChannelCarousel(chState.href);
-    return;
-  }
-
-  const carousel = overlayBody.querySelector(".chCarousel");
-  if (!carousel) return;
-
-  const slides = Array.from(overlayBody.querySelectorAll(".chMedia"));
-  const dots = Array.from(overlayBody.querySelectorAll(".chDot"));
-  if (!slides.length) return;
-
-  let active = slides.findIndex((el) => el.classList.contains("is-on"));
-  if (active < 0) active = 0;
-
-  if (action === "prev") active = (active - 1 + slides.length) % slides.length;
-  if (action === "next") active = (active + 1) % slides.length;
-  if (action === "go") active = Number(btn.getAttribute("data-i") || 0);
-
-  slides.forEach((el, i) => el.classList.toggle("is-on", i === active));
-  dots.forEach((el, i) => el.classList.toggle("is-on", i === active));
-
-  resetOverlayAutoSlides();
 });
 
 /* click tile -> overlay */
