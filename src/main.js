@@ -1276,6 +1276,30 @@ function bindIntro() {
     }
   });
 }
+
+/* =========================
+   AUTO SCALE (fit one screen)
+========================= */
+function applyAutoScale() {
+  const shell = document.querySelector(".wii-shell");
+  if (!shell) return;
+
+  const rootStyles = getComputedStyle(document.documentElement);
+  const shellW = parseFloat(rootStyles.getPropertyValue("--shellW")) || 1400;
+  const shellH = parseFloat(rootStyles.getPropertyValue("--shellH")) || 900;
+  const outer = parseFloat(rootStyles.getPropertyValue("--outer")) || 28;
+
+  const vv = window.visualViewport;
+  const vw = vv?.width || window.innerWidth;
+  const vh = vv?.height || window.innerHeight;
+
+  const availW = Math.max(0, vw - outer);
+  const availH = Math.max(0, vh - outer);
+
+  const scale = Math.min(availW / shellW, availH / shellH, 1);
+  shell.style.setProperty("--ui-scale", scale.toFixed(3));
+  shell.classList.toggle("is-autoscale", scale < 0.995);
+}
 /* =========================
    INIT
 ========================= */
@@ -1285,8 +1309,7 @@ if (grid) grid.classList.add("is-swoosh-in");
 tickClock();
 setInterval(tickClock, 1000);
 bindIntro();
-renderPage();
-if (grid) grid.classList.add("is-swoosh-in");
-tickClock();
-setInterval(tickClock, 1000);
-bindIntro();
+
+applyAutoScale();
+window.addEventListener("resize", applyAutoScale);
+window.visualViewport?.addEventListener("resize", applyAutoScale);

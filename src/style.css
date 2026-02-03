@@ -54,6 +54,16 @@ body{
   display: grid;
   grid-template-rows: auto 1fr auto;
   gap: 18px;
+
+  --ui-scale: 1;
+  transform: scale(var(--ui-scale));
+  transform-origin: top center;
+  will-change: transform;
+}
+
+.wii-shell.is-autoscale{
+  width: var(--shellW);
+  height: var(--shellH);
 }
 
 /* viewport units più affidabili su mobile */
