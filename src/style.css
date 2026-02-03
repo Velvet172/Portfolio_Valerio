@@ -49,10 +49,23 @@ body{
   height: min(var(--shellH), calc(100vh - var(--outer)));
   margin: 0;
   padding: 14px 14px 13px;
+  padding-bottom: calc(13px + env(safe-area-inset-bottom));
 
   display: grid;
   grid-template-rows: auto 1fr auto;
   gap: 18px;
+}
+
+/* viewport units più affidabili su mobile */
+@supports (height: 100svh){
+  .wii-shell{
+    height: min(var(--shellH), calc(100svh - var(--outer)));
+  }
+}
+@supports (height: 100dvh){
+  .wii-shell{
+    height: min(var(--shellH), calc(100dvh - var(--outer)));
+  }
 }
 
 /* Header */
@@ -209,7 +222,17 @@ body{
   width: 100%;
   height: 100%;
 }
+/* FIX iOS: evita testo tagliato dentro flex */
+.wii-tileContent > div{
+  min-width: 0;
+}
 
+.wii-title,
+.wii-sub{
+  overflow-wrap: anywhere; /* oppure break-word */
+  word-break: break-word;
+  hyphens: auto;
+}
 .wii-icon{
   width: 46px;
   height: 46px;
@@ -703,6 +726,8 @@ body{
 
   .wii-h1{ font-size: 18px; }
   .wii-time{ font-size: 30px; }
+  .wii-shell{ gap: 12px; }
+  .wii-board{ padding: 10px; }
 
   .wii-grid{
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -711,6 +736,9 @@ body{
   }
 
   .wii-tileContent{ padding: 14px; }
+  .wii-icon{ width: 40px; height: 40px; font-size: 18px; border-radius: 14px; }
+  .wii-title{ font-size: 14px; }
+  .wii-sub{ font-size: 11px; }
 }
 /* =========================
    Overlay: PROJECTS CAROUSEL
@@ -1004,4 +1032,3 @@ body{
 .wii-tile:active .wii-icon{
   animation: none;
 }
-

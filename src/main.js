@@ -139,6 +139,22 @@ function ensureAudio() {
   return audioCtx;
 }
 
+function unlockAudio() {
+  const ctx = ensureAudio();
+  if (!ctx) return;
+
+  if (ctx.state === "suspended") ctx.resume().catch(() => {});
+
+  // iOS: serve un suono "muto" per sbloccare l'audio
+  try {
+    const buffer = ctx.createBuffer(1, 1, ctx.sampleRate);
+    const src = ctx.createBufferSource();
+    src.buffer = buffer;
+    src.connect(ctx.destination);
+    src.start(0);
+  } catch {}
+}
+
 function beep({ type = "sine", freq = 700, duration = 0.05, gain = 0.04, attack = 0.002, release = 0.035 } = {}) {
   const ctx = ensureAudio();
   if (!ctx) return;
@@ -349,7 +365,10 @@ if (btnLeft) {
     audioEnabled = !audioEnabled;
     btnLeft.textContent = audioEnabled ? "🔊" : "🔇";
     if (!audioEnabled) stopMusic();
-    else startMusic();
+    else {
+      unlockAudio();
+      startMusic();
+    }
   });
 }
 if (btnRight) btnRight.textContent = "🎮";
@@ -873,7 +892,10 @@ document.addEventListener("pointerout", (e) => {
 });
 
 document.addEventListener("pointerdown", () => {
-  if (audioEnabled) startMusic();
+  if (audioEnabled) {
+    unlockAudio();
+    startMusic();
+  }
   if (!pointerEl || lastPointerType !== "mouse") return;
   pointerEl.classList.add("is-down");
   clickSound();
@@ -1198,7 +1220,7 @@ function startApp() {
   // audio: se vuoi far partire subito la musica al “click per iniziare”
   // (se preferisci che la musica parta solo col tuo bottone 🔊, commenta queste 2 righe)
   if (audioEnabled) {
-    ensureAudio();
+    unlockAudio();
     startMusic();
   }
 
@@ -1213,6 +1235,10 @@ function bindIntro() {
 
   // click/tap ovunque sull’intro
   introEl.addEventListener("click", (e) => {
+    e.preventDefault();
+    startApp();
+  });
+  introEl.addEventListener("pointerdown", (e) => {
     e.preventDefault();
     startApp();
   });
@@ -1240,4 +1266,3 @@ if (grid) grid.classList.add("is-swoosh-in");
 tickClock();
 setInterval(tickClock, 1000);
 bindIntro();
-
