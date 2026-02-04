@@ -42,18 +42,6 @@ function clamp(n, a, b) {
 const pages = [
   [
     {
-      icon: "🧩",
-      t: "Progetti",
-      s: "Case study e lavori",
-      href: "#projects",
-      previews: [
-        asset("img/PROGETTI/PROG_1.jpg"),
-        asset("img/PROGETTI/PROG_2.jpg"),
-        asset("img/PROGETTI/PROG_3.jpg"),
-      ],
-    },
-    { icon: "🎬", t: "Video", s: "Reel e underwater", href: "#videos" },
-    {
       icon: "👋",
       t: "Chi sono",
       s: "Bio + competenze",
@@ -64,17 +52,69 @@ const pages = [
         asset("img/BIO/BIO_3.jpg"),
       ],
     },
-    { icon: "✉️", t: "Contatti", s: "Mail e social", href: "#contact" },
+    {
+      icon: "🎓",
+      t: "Esperienze",
+      s: "Formazione / studi",
+      href: "#exp",
+    },
+    {
+      icon: "✉️",
+      t: "Contatti",
+      s: "Mail e social",
+      href: "#contact",
+    },
 
-    { icon: "🛞", t: "Automotive", s: "Officina / brand", href: "#auto" },
-    { icon: "🌊", t: "Underwater", s: "Riprese sub", href: "#underwater" },
-    { icon: "🎥", t: "Social", s: "Reel / ads", href: "#social" },
-    { icon: "🧠", t: "AI", s: "Workflow", href: "#ai" },
+    {
+      icon: "🧩",
+      t: "Progetti",
+      s: "Case study e lavori",
+      href: "#projects",
+      previews: [
+        asset("img/PROGETTI/PROG_1.jpg"),
+        asset("img/PROGETTI/PROG_2.jpg"),
+        asset("img/PROGETTI/PROG_3.jpg"),
+      ],
+    },
+    {
+      icon: "📱",
+      t: "Social",
+      s: "I miei profili",
+      href: "#social",
+    },
+    {
+      icon: "🎬",
+      t: "Video",
+      s: "Reel e underwater",
+      href: "#videos",
+    },
 
-    { icon: "📌", t: "Servizi", s: "Cosa offro", href: "#services" },
-    { icon: "🏁", t: "Esperienze", s: "Pista / progetti", href: "#exp" },
-    { icon: "🧰", t: "Tool", s: "Setup", href: "#tools" },
-    { icon: "⭐️", t: "Highlight", s: "Selezionati", href: "#high" },
+    {
+      icon: "🛠️",
+      t: "Skills",
+      s: "Cosa so fare",
+      href: "#tools",
+    },
+    {
+      icon: "🤖",
+      t: "AI",
+      s: "Workflow",
+      href: "#ai",
+      previewGif: {
+        still: asset("img/CHANNELS/ai.gif.png"),
+        gif: asset("img/CHANNELS/AI.gif"),
+      },
+    },
+    {
+      icon: "📌",
+      t: "Servizi",
+      s: "Cosa offro",
+      href: "#services",
+      previewGif: {
+        still: asset("img/CHANNELS/gif-lavori.png"),
+        gif: asset("img/CHANNELS/gif-lavori.gif"),
+      },
+    },
   ],
   [
     { icon: "📷", t: "Galleria", s: "Foto e frame", href: "#gallery" },
@@ -97,10 +137,24 @@ function renderPage() {
 
   grid.innerHTML = items
     .map((x) => {
+      const hasGifPreview = x.previewGif?.still && x.previewGif?.gif;
       const previews = Array.isArray(x.previews) ? x.previews : [];
-      const previewHtml = previews.length
+      const previewHtml = hasGifPreview
         ? `
-          <div class="wii-preview" aria-hidden="true">
+          <div class="wii-preview wii-preview--single" aria-hidden="true">
+            <img
+              src="${x.previewGif.still}"
+              data-preview-still="${x.previewGif.still}"
+              data-preview-gif="${x.previewGif.gif}"
+              alt=""
+              loading="lazy"
+              decoding="async"
+            >
+          </div>
+        `
+        : previews.length
+        ? `
+          <div class="wii-preview ${previews.length === 1 ? "wii-preview--single" : ""}" aria-hidden="true">
             ${previews.map((src) => `<img src="${src}" alt="" loading="lazy" decoding="async">`).join("")}
           </div>
         `
@@ -120,6 +174,47 @@ function renderPage() {
       `;
     })
     .join("");
+
+  setupTilePreviewPhases();
+  setupTileGifPreviews();
+}
+
+function setupTilePreviewPhases() {
+  if (!grid) return;
+
+  const previews = Array.from(grid.querySelectorAll(".wii-preview:not(.wii-preview--single)"));
+  previews.forEach((preview) => {
+    // Keep same cycle duration, but shift phase per tile so carousels are not synchronized.
+    const phase = Math.random() * 12;
+    preview.style.setProperty("--preview-phase", `-${phase.toFixed(2)}s`);
+  });
+}
+
+function setupTileGifPreviews() {
+  if (!grid) return;
+
+  const gifImgs = Array.from(grid.querySelectorAll("img[data-preview-gif]"));
+  gifImgs.forEach((img) => {
+    const tile = img.closest(".wii-tile");
+    if (!tile) return;
+
+    const still = img.getAttribute("data-preview-still");
+    const gif = img.getAttribute("data-preview-gif");
+    if (!still || !gif) return;
+
+    const startGif = () => {
+      // reset url to restart animation when hover starts
+      img.src = `${gif}?t=${Date.now()}`;
+    };
+    const stopGif = () => {
+      img.src = still;
+    };
+
+    tile.addEventListener("mouseenter", startGif);
+    tile.addEventListener("mouseleave", stopGif);
+    tile.addEventListener("focusin", startGif);
+    tile.addEventListener("focusout", stopGif);
+  });
 }
 
 /* =========================
@@ -421,6 +516,13 @@ const overlayState = {
   dom: null, // cache carousel nodes
 };
 let bioCarouselTimer = null;
+const LINKEDIN_PROFILE_URL = "https://www.linkedin.com/in/valerio-serani-682a48215/";
+const INSTAGRAM_URL = "https://www.instagram.com/velvet_172/";
+const TIKTOK_URL = "https://www.tiktok.com/@heyits172";
+const VIMEO_URL = "https://vimeo.com/user95787021";
+const BEHANCE_URL = "https://www.behance.net/velvet172";
+const EMAIL = "valerioserani@gmail.com";
+const PHONE = "+39 3469697747";
 
 const channelContent = {
   "#projects": {
@@ -436,7 +538,7 @@ const channelContent = {
             what: "Creativity + layout",
             moreHtml: `
               <h3 class="chMoreTitle">Sunsilk — Testata Home</h3>
-              <p class="chMoreText">Contenuto segnaposto: contesto, obiettivi, ruolo, output.</p>
+              <p class="chMoreText">Progetto estratto dal portfolio accademico pubblicato su LinkedIn. Focus su gerarchia visiva, adattamento testata e leggibilità in home.</p>
             `,
           },
           {
@@ -446,7 +548,7 @@ const channelContent = {
             what: "Layout + output ADV",
             moreHtml: `
               <h3 class="chMoreTitle">M&M’s / UCI — Screentime</h3>
-              <p class="chMoreText">Contenuto segnaposto: obiettivi, ruoli, risultati.</p>
+              <p class="chMoreText">Studio ADV dedicato al formato cinema: impaginazione del messaggio, bilanciamento brand/prodotto e output orientato alla visibilità.</p>
             `,
           },
           {
@@ -456,7 +558,7 @@ const channelContent = {
             what: "Creativity / design",
             moreHtml: `
               <h3 class="chMoreTitle">Visual</h3>
-              <p class="chMoreText">Contenuto segnaposto: contesto, obiettivo, delivery.</p>
+              <p class="chMoreText">Concept visual con approccio design-first: direzione creativa, composizione e resa finale pensata per contenuti social e digital.</p>
             `,
           },
           {
@@ -466,7 +568,7 @@ const channelContent = {
             what: "Visual + layout",
             moreHtml: `
               <h3 class="chMoreTitle">Snickers / Twix</h3>
-              <p class="chMoreText">Contenuto segnaposto: brief, processo, risultato.</p>
+              <p class="chMoreText">Adattamento cover multi-brand con attenzione a consistenza grafica, impatto del key visual e coerenza tra linee prodotto.</p>
             `,
           },
           {
@@ -476,7 +578,7 @@ const channelContent = {
             what: "Print / layout",
             moreHtml: `
               <h3 class="chMoreTitle">Compeed — Volantino</h3>
-              <p class="chMoreText">Contenuto segnaposto: obiettivi, stile, output.</p>
+              <p class="chMoreText">Materiale print orientato alla conversione: struttura informativa chiara, call to action evidente e visual di supporto al messaggio.</p>
             `,
           },
           {
@@ -486,7 +588,7 @@ const channelContent = {
             what: "Brand / creative",
             moreHtml: `
               <h3 class="chMoreTitle">Boem</h3>
-              <p class="chMoreText">Contenuto segnaposto: concept e direzione visiva.</p>
+              <p class="chMoreText">Esplorazione brand/creative: ricerca di tono visivo, elementi distintivi e applicazione coerente su formato statico.</p>
             `,
           },
           {
@@ -496,7 +598,7 @@ const channelContent = {
             what: "UI / layout",
             moreHtml: `
               <h3 class="chMoreTitle">Landing Carousel</h3>
-              <p class="chMoreText">Contenuto segnaposto: UX e output.</p>
+              <p class="chMoreText">Proposta UI per carousel in landing: ordine dei contenuti, ritmo di navigazione e leggibilità mobile-first.</p>
             `,
           },
           {
@@ -506,7 +608,7 @@ const channelContent = {
             what: "Print / design",
             moreHtml: `
               <h3 class="chMoreTitle">Cartolina</h3>
-              <p class="chMoreText">Contenuto segnaposto: concept e delivery.</p>
+              <p class="chMoreText">Output editoriale/print con focus su layout, equilibrio tipografico e resa visiva immediata sul formato ridotto.</p>
             `,
           },
           {
@@ -516,7 +618,7 @@ const channelContent = {
             what: "Brand / layout",
             moreHtml: `
               <h3 class="chMoreTitle">Control</h3>
-              <p class="chMoreText">Contenuto segnaposto: obiettivo e output.</p>
+              <p class="chMoreText">Visual brand-oriented sviluppato per rafforzare riconoscibilità e chiarezza del messaggio in ambiente digitale.</p>
             `,
           },
           {
@@ -526,7 +628,7 @@ const channelContent = {
             what: "Campaign / visual",
             moreHtml: `
               <h3 class="chMoreTitle">Amuchina — Hai Vinto</h3>
-              <p class="chMoreText">Contenuto segnaposto: campagna e risultati.</p>
+              <p class="chMoreText">Creatività per campagna promozionale: headline e visual impostati per immediatezza, impatto e lettura rapida.</p>
             `,
           },
           {
@@ -536,7 +638,7 @@ const channelContent = {
             what: "Visual / layout",
             moreHtml: `
               <h3 class="chMoreTitle">Hai Vinto</h3>
-              <p class="chMoreText">Contenuto segnaposto: brief e output.</p>
+              <p class="chMoreText">Variante visual della campagna con focus su adattamento grafico, coerenza narrativa e pulizia compositiva.</p>
             `,
           },
           {
@@ -546,7 +648,7 @@ const channelContent = {
             what: "Layout / design",
             moreHtml: `
               <h3 class="chMoreTitle">Testata Home</h3>
-              <p class="chMoreText">Contenuto segnaposto: versione e varianti.</p>
+              <p class="chMoreText">Sviluppo testata in piu varianti: priorita ai contenuti, bilanciamento spazi e ottimizzazione dell'impatto above-the-fold.</p>
             `,
           },
           {
@@ -556,7 +658,7 @@ const channelContent = {
             what: "UI / layout",
             moreHtml: `
               <h3 class="chMoreTitle">UILtemp — App Site</h3>
-              <p class="chMoreText">Contenuto segnaposto: UX, UI, output.</p>
+              <p class="chMoreText">Case UI/layout per sito-app: struttura delle sezioni, chiarezza d'uso e coerenza visiva tra componenti.</p>
             `,
           },
         ],
@@ -569,11 +671,11 @@ const channelContent = {
     html: `
       <div class="wii-card">
         <h3>Showreel</h3>
-        <p>Link, embed o thumbs. (Poi mettiamo Vimeo/YouTube).</p>
+        <p><strong>Selezione</strong> dei progetti <strong>visual</strong> e <strong>ADV</strong> presenti nel portfolio pubblicato su <strong>LinkedIn</strong>, sintetizzati in formato breve.</p>
       </div>
       <div class="wii-card">
         <h3>Underwater</h3>
-        <p>Sezione dedicata alle immersioni e riprese sub.</p>
+        <p><strong>Produzione video</strong> dedicata alle riprese subacquee: <strong>storytelling visivo</strong>, controllo <strong>luce/colore</strong> e contenuti per <strong>social</strong>.</p>
       </div>
     `,
   },
@@ -589,7 +691,10 @@ const channelContent = {
         </div>
         <div class="bioDesc">
           <h3>Chi sono</h3>
-          <p>Qui inserisco una breve descrizione bio e competenze (segnaposto).</p>
+          <p>Ciao, sono <strong>Valerio</strong>: junior <strong>graphic designer</strong> di <strong>Roma</strong> e autentico nerd. Ho approcciato il design attraverso <strong>videogiochi</strong>, <strong>copertine</strong> e <strong>cultura pop</strong>, trasformando questa passione in un percorso professionale.</p>
+          <p>Il mio approccio unisce <strong>sperimentazione</strong>, <strong>rischio</strong> e <strong>senso estetico</strong> per creare output non solo appaganti, ma soprattutto <strong>funzionali</strong>.</p>
+          <p>Negli ultimi mesi ho continuato a <strong>sperimentare</strong> con i <strong>video social</strong>: ho curato <strong>fotografia</strong>, <strong>regia</strong> e <strong>montaggio</strong>, uscendo dalla mia <strong>zona di comfort</strong>. Sperimentare e imparare sul campo è la parte che mi entusiasma di più.</p>
+          <p class="wii-meta">Lingue: <strong>Italiano C2</strong>, <strong>English B2</strong></p>
         </div>
       </div>
     `,
@@ -599,8 +704,158 @@ const channelContent = {
     title: "Contatti",
     html: `
       <div class="wii-card">
-        <h3>Scrivimi</h3>
-        <p>Email, Instagram, WhatsApp business…</p>
+        <h3>Contatti diretti</h3>
+        <p><strong>Email</strong>: <a href="mailto:${EMAIL}">${EMAIL}</a></p>
+        <p><strong>Telefono</strong>: <a href="tel:${PHONE.replace(/\s+/g, "")}">${PHONE}</a></p>
+        <p class="wii-meta">Base: <strong>Roma</strong></p>
+      </div>
+      <div class="wii-card">
+        <h3>Profilo LinkedIn</h3>
+        <p><strong>Profilo LinkedIn</strong> con esperienza, formazione e contatti.</p>
+        <div class="wii-links">
+          <a class="wii-link" href="${LINKEDIN_PROFILE_URL}" target="_blank" rel="noopener noreferrer">
+            Apri profilo LinkedIn
+          </a>
+        </div>
+      </div>
+    `,
+  },
+
+  "#social": {
+    title: "Social",
+    html: `
+      <div class="wii-card">
+        <h3>Canali social</h3>
+        <p>Qui trovi tutti i miei social: raccontano la mia parte piu professionale e quella piu ludica. Passione e lavoro sono sempre andati di pari passo nella mia vita, e qui li vedi convivere.</p>
+        <div class="social-list">
+          <a class="social-item" href="${LINKEDIN_PROFILE_URL}" target="_blank" rel="noopener noreferrer">
+            <span class="social-ico">💼</span>
+            <span class="social-text"><strong>LinkedIn</strong> /valerio-serani-682a48215</span>
+          </a>
+          <a class="social-item" href="${INSTAGRAM_URL}" target="_blank" rel="noopener noreferrer">
+            <span class="social-ico">📸</span>
+            <span class="social-text"><strong>Instagram</strong> @velvet_172</span>
+          </a>
+          <a class="social-item" href="${TIKTOK_URL}" target="_blank" rel="noopener noreferrer">
+            <span class="social-ico">🎵</span>
+            <span class="social-text"><strong>TikTok</strong> @heyits172</span>
+          </a>
+          <a class="social-item" href="${VIMEO_URL}" target="_blank" rel="noopener noreferrer">
+            <span class="social-ico">🎬</span>
+            <span class="social-text"><strong>Vimeo</strong> /user95787021</span>
+          </a>
+          <a class="social-item" href="${BEHANCE_URL}" target="_blank" rel="noopener noreferrer">
+            <span class="social-ico">🅱️</span>
+            <span class="social-text"><strong>Behance</strong> /velvet172</span>
+          </a>
+        </div>
+      </div>
+    `,
+  },
+
+  "#exp": {
+    title: "Esperienze",
+    html: `
+      <div class="wii-card">
+        <h3>Graphic Designer Jr - Cube Proemotion</h3>
+        <p class="wii-meta"><strong>Gen 2024 - Gen 2026</strong> | <strong>Roma</strong></p>
+        <ul class="wii-list">
+          <li>Collaborazione con <strong>team creativo</strong> per <strong>concept</strong> in linea con esigenze <strong>marketing</strong> e <strong>branding</strong>.</li>
+          <li>Realizzazione <strong>materiali grafici</strong> per campagne pubblicitarie, promozione e social.</li>
+          <li>Progettazione <strong>layout</strong> per sito web, social media e newsletter.</li>
+          <li>Gestione file per <strong>produzione</strong> e coordinamento qualita con attenzione al dettaglio.</li>
+          <li>Supporto nella creazione <strong>contenuti visivi</strong> per eventi e promozioni aziendali.</li>
+        </ul>
+      </div>
+      <div class="wii-card">
+        <h3>Formazione</h3>
+        <ul class="wii-list">
+          <li><strong>LEARNN</strong> - Percorsi completati su <strong>marketing digitale</strong>, <strong>social media</strong>, <strong>AI</strong> e produttivita creativa.</li>
+          <li>Corso <strong>Digital Skills</strong>, <strong>Marketing</strong>, <strong>SEO</strong> (LV8 Certification Badge, Roma).</li>
+          <li><strong>NFT e Metaverso</strong> con Davide Cardea (Giu 2022, Roma).</li>
+          <li><strong>AANT</strong> - Accademia delle Arti e Nuove Tecnologie, <strong>Graphic Design</strong> (Nov 2019 - Giu 2022, Roma).</li>
+          <li><strong>Liceo Scientifico Francesco d'Assisi</strong> (Set 2012 - Giu 2018, Roma).</li>
+        </ul>
+      </div>
+    `,
+  },
+
+  "#services": {
+    title: "Servizi",
+    html: `
+      <div class="wii-card">
+        <h3>Cosa offro</h3>
+        <ul class="wii-list">
+          <li><strong>Visual design</strong> per campagne <strong>ADV</strong> e social.</li>
+          <li><strong>Art direction</strong> e sviluppo <strong>concept</strong>.</li>
+          <li><strong>Layout</strong> per sito, newsletter e contenuti digital.</li>
+          <li>Adattamenti creativi <strong>multi-formato</strong> (print e digital).</li>
+          <li>Supporto al team marketing con output orientati alla <strong>comunicazione</strong> e alla funzione.</li>
+        </ul>
+      </div>
+    `,
+  },
+
+  "#tools": {
+    title: "Tool",
+    html: `
+      <div class="wii-card">
+        <h3>Hard Skills</h3>
+        <ul class="wii-list">
+          <li><strong>Adobe Suite</strong> (Photoshop, Illustrator, InDesign, After Effects, Premiere Pro).</li>
+          <li><strong>Art direction</strong> e <strong>copywriting</strong>.</li>
+          <li><strong>3D</strong>: Cinema4D, Substance Designer, V-Ray, Chitubox.</li>
+          <li><strong>Collaborazione</strong>: Figma, Mural, Whimsical.</li>
+          <li><strong>Video art direction</strong> e video editing (ideazione, script, storyboard, montaggio).</li>
+        </ul>
+      </div>
+    `,
+  },
+
+  "#ai": {
+    title: "AI",
+    html: `
+      <div class="wii-card">
+        <h3>Workflow AI</h3>
+        <p>Sono un <strong>\"AI nerd\"</strong>: uso l'<strong>AI</strong> per <strong>ricerca</strong>, direzione creativa e velocita di esecuzione, mantenendo controllo umano su <strong>concept</strong> e <strong>qualita</strong>. In questo sito applico un <strong>workflow AI/web</strong> completo: revisione contenuti, riscrittura sezioni, struttura della griglia, aggiornamento esperienze e sincronizzazione con <strong>portfolio/CV</strong>. Ho integrato <strong>chat</strong> e <strong>coding</strong> (vibe coding) e un processo a catena tra analisi file, generazione asset, modifiche front-end e test, rendendo questo sito un vero e proprio <strong>showcase</strong> delle mie abilita con l'AI.</p>
+        <p class="wii-meta">Obiettivo: <strong>accelerare tempi</strong> e <strong>qualita</strong>, mantenendo controllo creativo umano su tono, priorita e coerenza finale.</p>
+      </div>
+    `,
+  },
+
+  "#auto": {
+    title: "Automotive",
+    html: `
+      <div class="wii-card">
+        <h3>Automotive Visuals</h3>
+        <p>Canale dedicato a contenuti automotive: visual campaign, branding e creativita per officine o brand di settore.</p>
+      </div>
+    `,
+  },
+
+  "#underwater": {
+    title: "Underwater",
+    html: `
+      <div class="wii-card">
+        <h3>Riprese Sub</h3>
+        <p>Produzione visual e video underwater con focus su storytelling, composizione e color mood.</p>
+      </div>
+    `,
+  },
+
+  "#high": {
+    title: "Highlight",
+    html: `
+      <div class="wii-card">
+        <h3>In evidenza dal portfolio</h3>
+        <ul class="wii-list">
+          <li>Visione creativa ispirata a cultura pop, videogiochi e fumetti.</li>
+          <li>Ricerca di equilibrio tra sperimentazione e funzionalita.</li>
+          <li>Esperienza attiva come Graphic Designer Jr.</li>
+          <li>Background accademico in Graphic Design.</li>
+          <li>Competenze trasversali tra ADV, digital layout, social e video direction.</li>
+          <li>Soft skills: teamwork, empatia, problem solving, creativita.</li>
+        </ul>
       </div>
     `,
   },
@@ -788,6 +1043,8 @@ function openChannel(href) {
   // reset overlay mode classes
   overlay.classList.toggle("is-game", href === "#minigame");
   overlay.classList.toggle("is-carousel", href === "#projects");
+  overlay.classList.toggle("is-about", href === "#about");
+  overlay.classList.toggle("is-exp", href === "#exp");
 
   const data = channelContent[href] || {
     title: "Canale",

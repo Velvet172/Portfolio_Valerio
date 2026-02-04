@@ -1,0 +1,95 @@
+{
+  "owner": "Valerio Serani",
+  "source": "src/main.js",
+  "generated_on": "2026-02-04",
+  "projects": [
+    {
+      "image": "public/img/PROGETTI/PROG_1.jpg",
+      "client": "Sunsilk",
+      "title": "Testata Home 2025",
+      "focus": "Creativity + layout"
+    },
+    {
+      "image": "public/img/PROGETTI/PROG_2.jpg",
+      "client": "M&M’s / UCI",
+      "title": "Screentime Cinema",
+      "focus": "Layout + output ADV"
+    },
+    {
+      "image": "public/img/PROGETTI/PROG_3.jpg",
+      "client": "Cliente",
+      "title": "Visual",
+      "focus": "Creativity / design"
+    },
+    {
+      "image": "public/img/PROGETTI/PROG_4.jpg",
+      "client": "Snickers / Twix",
+      "title": "Cover Adattamento",
+      "focus": "Visual + layout"
+    },
+    {
+      "image": "public/img/PROGETTI/PROG_5.jpg",
+      "client": "Compeed",
+      "title": "Volantino Stop Brufoli",
+      "focus": "Print / layout"
+    },
+    {
+      "image": "public/img/PROGETTI/PROG_6.jpg",
+      "client": "Boem",
+      "title": "Visual",
+      "focus": "Brand / creative"
+    },
+    {
+      "image": "public/img/PROGETTI/PROG_7.jpg",
+      "client": "Landing",
+      "title": "Carousel",
+      "focus": "UI / layout"
+    },
+    {
+      "image": "public/img/PROGETTI/PROG_8.jpg",
+      "client": "Cartolina",
+      "title": "Fronte",
+      "focus": "Print / design"
+    },
+    {
+      "image": "public/img/PROGETTI/PROG_9.jpg",
+      "client": "Control",
+      "title": "Visual",
+      "focus": "Brand / layout"
+    },
+    {
+      "image": "public/img/PROGETTI/PROG_10.jpg",
+      "client": "Amuchina",
+      "title": "Hai Vinto",
+      "focus": "Campaign / visual"
+    },
+    {
+      "image": "public/img/PROGETTI/PROG_11.jpg",
+      "client": "Campagna",
+      "title": "Hai Vinto",
+      "focus": "Visual / layout"
+    },
+    {
+      "image": "public/img/PROGETTI/PROG_12.jpg",
+      "client": "Testata Home",
+      "title": "Visual",
+      "focus": "Layout / design"
+    },
+    {
+      "image": "public/img/PROGETTI/PROG_13.jpg",
+      "client": "UILtemp",
+      "title": "App Site Play",
+      "focus": "UI / layout"
+    }
+  ],
+  "channels": {
+    "contact": {
+      "label": "LinkedIn",
+      "url": "https://www.linkedin.com/posts/valerio-serani-682a48215_portfolio-accademico-activity-7130600228142915584-dVM3?utm_source=share&utm_medium=member_desktop&rcm=ACoAADZwBcIBeF2zc8AQnoazIY19xyW_Q9Ts_NQ"
+    },
+    "social": {
+      "label": "LinkedIn",
+      "url": "https://www.linkedin.com/posts/valerio-serani-682a48215_portfolio-accademico-activity-7130600228142915584-dVM3?utm_source=share&utm_medium=member_desktop&rcm=ACoAADZwBcIBeF2zc8AQnoazIY19xyW_Q9Ts_NQ"
+    }
+  }
+}
