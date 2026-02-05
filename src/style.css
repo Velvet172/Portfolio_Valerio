@@ -1022,7 +1022,7 @@ body{
   .wii-shell{ gap: 8px; }
   .wii-h1{ font-size: 15px; }
   .wii-time{ font-size: 22px; }
-  .wii-tileContent{ padding: 8px; }
+  .wii-tileContent{ padding: 60px 8px 10px; }
   .wii-icon{ width: 34px; height: 34px; font-size: 16px; }
   .wii-title{ font-size: 12.5px; }
   .wii-sub{ font-size: 10px; }
