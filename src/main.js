@@ -100,9 +100,8 @@ const pages = [
       t: "AI",
       s: "Workflow",
       href: "#ai",
-      previewGif: {
-        still: asset("img/CHANNELS/ai.gif.png"),
-        gif: asset("img/CHANNELS/AI.gif"),
+      previewVideo: {
+        src: asset("img/CHANNELS/ai.mp4"),
       },
     },
     {
@@ -110,9 +109,8 @@ const pages = [
       t: "Servizi",
       s: "Cosa offro",
       href: "#services",
-      previewGif: {
-        still: asset("img/CHANNELS/gif-lavori.png"),
-        gif: asset("img/CHANNELS/gif-lavori.gif"),
+      previewVideo: {
+        src: asset("img/CHANNELS/servizi.mp4"),
       },
     },
   ],
@@ -137,19 +135,12 @@ function renderPage() {
 
   grid.innerHTML = items
     .map((x) => {
-      const hasGifPreview = x.previewGif?.still && x.previewGif?.gif;
+      const hasVideoPreview = x.previewVideo?.src;
       const previews = Array.isArray(x.previews) ? x.previews : [];
-      const previewHtml = hasGifPreview
+      const previewHtml = hasVideoPreview
         ? `
-          <div class="wii-preview wii-preview--single" aria-hidden="true">
-            <img
-              src="${x.previewGif.still}"
-              data-preview-still="${x.previewGif.still}"
-              data-preview-gif="${x.previewGif.gif}"
-              alt=""
-              loading="lazy"
-              decoding="async"
-            >
+          <div class="wii-preview wii-preview--single wii-preview--video" aria-hidden="true">
+            <video class="preview-video" src="${x.previewVideo.src}" muted loop playsinline preload="auto"></video>
           </div>
         `
         : previews.length
@@ -176,7 +167,7 @@ function renderPage() {
     .join("");
 
   setupTilePreviewPhases();
-  setupTileGifPreviews();
+  setupTileVideoPreviews();
 }
 
 function setupTilePreviewPhases() {
@@ -190,30 +181,46 @@ function setupTilePreviewPhases() {
   });
 }
 
-function setupTileGifPreviews() {
+function setupTileVideoPreviews() {
   if (!grid) return;
 
-  const gifImgs = Array.from(grid.querySelectorAll("img[data-preview-gif]"));
-  gifImgs.forEach((img) => {
-    const tile = img.closest(".wii-tile");
+  const previews = Array.from(grid.querySelectorAll(".wii-preview--video"));
+  previews.forEach((preview) => {
+    const tile = preview.closest(".wii-tile");
     if (!tile) return;
 
-    const still = img.getAttribute("data-preview-still");
-    const gif = img.getAttribute("data-preview-gif");
-    if (!still || !gif) return;
+    const video = preview.querySelector(".preview-video");
+    if (!video) return;
 
-    const startGif = () => {
-      // reset url to restart animation when hover starts
-      img.src = `${gif}?t=${Date.now()}`;
+    video.muted = true;
+    video.loop = true;
+    video.setAttribute("playsinline", "");
+
+    // Ensure the first frame is visible when paused
+    const onReady = () => {
+      if (video.paused) {
+        try { video.currentTime = 0; } catch {}
+      }
     };
-    const stopGif = () => {
-      img.src = still;
+    video.addEventListener("loadeddata", onReady, { once: true });
+
+    const startVid = () => {
+      preview.classList.add("is-hover");
+      video.currentTime = 0;
+      video.play().catch(() => {});
+    };
+    const stopVid = () => {
+      video.pause();
+      video.currentTime = 0;
+      preview.classList.remove("is-hover");
     };
 
-    tile.addEventListener("mouseenter", startGif);
-    tile.addEventListener("mouseleave", stopGif);
-    tile.addEventListener("focusin", startGif);
-    tile.addEventListener("focusout", stopGif);
+    tile.addEventListener("mouseenter", startVid);
+    tile.addEventListener("mouseleave", stopVid);
+    tile.addEventListener("pointerenter", startVid);
+    tile.addEventListener("pointerleave", stopVid);
+    tile.addEventListener("focusin", startVid);
+    tile.addEventListener("focusout", stopVid);
   });
 }
 
