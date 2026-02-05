@@ -988,14 +988,29 @@ body{
   .wii-board{ padding: 8px; border-radius: 30px; }
 
   .wii-grid{
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: repeat(3, minmax(140px, 1fr));
   }
 
-  .wii-tileContent{ padding: 10px; gap: 8px; }
-  .wii-icon{ width: 36px; height: 36px; font-size: 17px; border-radius: 12px; }
-  .wii-title{ font-size: 13px; }
-  .wii-sub{ font-size: 10.5px; margin-top: 3px; }
+  .wii-tileContent{
+    position: absolute;
+    inset: 0;
+    padding: 60px 8px 10px;
+    gap: 4px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .wii-icon{
+    display: grid;
+    width: 34px;
+    height: 34px;
+    font-size: 16px;
+    border-radius: 10px;
+  }
+  .wii-title{ font-size: 12.5px; text-align: center; }
+  .wii-sub{ font-size: 10.5px; margin-top: 2px; text-align: center; }
+  .wii-tileText{ align-items: center; text-align: center; }
 
   .wii-bar{ padding: 8px 10px; }
   .wii-pill{ height: 36px; min-width: 70px; padding: 0 12px; }
