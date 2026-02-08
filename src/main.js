@@ -102,6 +102,7 @@ const pages = [
       href: "#ai",
       previewVideo: {
         src: asset("img/CHANNELS/ai.mp4"),
+        poster: asset("img/CHANNELS/ai.jpg"),
       },
     },
     {
@@ -111,6 +112,7 @@ const pages = [
       href: "#services",
       previewVideo: {
         src: asset("img/CHANNELS/servizi.mp4"),
+        poster: asset("img/CHANNELS/servizi.jpg"),
       },
     },
   ],
@@ -139,11 +141,14 @@ function renderPage() {
   grid.innerHTML = items
     .map((x) => {
       const hasVideoPreview = x.previewVideo?.src;
+      const videoPoster = x.previewVideo?.poster;
       const previews = Array.isArray(x.previews) ? x.previews : [];
+      const posterAttr = videoPoster ? ` poster="${videoPoster}"` : "";
+      const posterStyle = videoPoster ? ` style="--preview-poster:url('${videoPoster}')"` : "";
       const previewHtml = hasVideoPreview
         ? `
-          <div class="wii-preview wii-preview--single wii-preview--video" aria-hidden="true">
-            <video class="preview-video" src="${x.previewVideo.src}" muted loop playsinline preload="auto"></video>
+          <div class="wii-preview wii-preview--single wii-preview--video"${posterStyle} aria-hidden="true">
+            <video class="preview-video" src="${x.previewVideo.src}"${posterAttr} muted loop playsinline preload="metadata"></video>
           </div>
         `
         : previews.length
@@ -219,6 +224,7 @@ function setupTileVideoPreviews() {
 
     // Ensure the first frame is visible when paused
     const onReady = () => {
+      preview.classList.add("is-ready");
       if (video.paused) {
         try { video.currentTime = 0; } catch {}
       }

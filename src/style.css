@@ -318,6 +318,9 @@ body{
 
 .wii-preview--video{
   background: #111a2a;
+  background-image: var(--preview-poster, none);
+  background-size: cover;
+  background-position: center;
 }
 .wii-preview--video .preview-video{
   position: absolute;
@@ -328,10 +331,13 @@ body{
   object-position: center;
   transform: scale(var(--video-zoom, 1));
   transform-origin: center;
-  opacity: 1;
+  opacity: 0;
   filter: saturate(0.75) contrast(1.02) blur(0.8px);
-  transition: filter 200ms ease, transform 200ms ease;
+  transition: filter 200ms ease, transform 200ms ease, opacity 200ms ease;
   will-change: transform, filter;
+}
+.wii-preview--video.is-ready .preview-video{
+  opacity: 1;
 }
 .wii-preview--video.is-hover .preview-video{
   filter: blur(0.6px) saturate(1.2) contrast(1.02);
