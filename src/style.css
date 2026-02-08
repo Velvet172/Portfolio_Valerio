@@ -326,9 +326,12 @@ body{
   height: 100%;
   object-fit: cover;
   object-position: center;
+  transform: scale(var(--video-zoom, 1));
+  transform-origin: center;
   opacity: 1;
   filter: saturate(0.75) contrast(1.02) blur(0.8px);
-  transition: filter 200ms ease;
+  transition: filter 200ms ease, transform 200ms ease;
+  will-change: transform, filter;
 }
 .wii-preview--video.is-hover .preview-video{
   filter: blur(0.6px) saturate(1.2) contrast(1.02);
@@ -1191,9 +1194,23 @@ body{
   transition: opacity 260ms ease;
 }
 
+/* blocco input per evitare click-through su mobile durante l'intro */
+body.is-intro-locked .wii-shell{
+  pointer-events: none;
+}
+
+body.is-intro-locked .wii-intro{
+  pointer-events: auto;
+}
+
+.wii-intro.is-fading{
+  opacity: 0;
+}
+
 .wii-intro.is-hidden{
   opacity: 0;
   pointer-events: none;
+  visibility: hidden;
 }
 
 .wii-introPanel{
@@ -1209,6 +1226,7 @@ body{
   transition: transform 260ms cubic-bezier(.2,.9,.2,1);
 }
 
+.wii-intro.is-fading .wii-introPanel,
 .wii-intro.is-hidden .wii-introPanel{
   transform: translateY(18px) scale(0.98);
 }

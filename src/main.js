@@ -85,7 +85,7 @@ const pages = [
     {
       icon: "🎬",
       t: "Video",
-      s: "Reel e underwater",
+      s: "Social e progetti",
       href: "#videos",
     },
 
@@ -124,6 +124,9 @@ const pages = [
 
 let pageIndex = 0;
 let suppressClickUntil = 0;
+const INTRO_SUPPRESS_MS = 420;
+const INTRO_HIDE_DELAY_MS = 320;
+const INTRO_LOCK_MS = 900;
 
 function getCurrentItems() {
   return ENABLE_PAGES ? pages[pageIndex] : pages[0];
@@ -168,6 +171,7 @@ function renderPage() {
 
   setupTilePreviewPhases();
   setupTileVideoPreviews();
+  setTileVideoZooms();
 }
 
 function setupTilePreviewPhases() {
@@ -178,6 +182,23 @@ function setupTilePreviewPhases() {
     // Keep same cycle duration, but shift phase per tile so carousels are not synchronized.
     const phase = Math.random() * 12;
     preview.style.setProperty("--preview-phase", `-${phase.toFixed(2)}s`);
+  });
+}
+
+function setTileVideoZooms() {
+  if (!grid) return;
+
+  const previews = Array.from(grid.querySelectorAll(".wii-preview--video"));
+  previews.forEach((preview) => {
+    const tile = preview.closest(".wii-tile");
+    if (!tile) return;
+
+    const rect = tile.getBoundingClientRect();
+    if (!rect.height) return;
+
+    const ratio = rect.width / rect.height;
+    const zoom = Math.max(1, Math.min(ratio, 16 / 9));
+    preview.style.setProperty("--video-zoom", zoom.toFixed(3));
   });
 }
 
@@ -487,6 +508,8 @@ function stopMusic() {
 if (btnLeft) {
   btnLeft.textContent = "🔊";
   btnLeft.addEventListener("click", () => {
+    if (!appStarted) return;
+    if (performance.now() < suppressClickUntil) return;
     audioEnabled = !audioEnabled;
     btnLeft.textContent = audioEnabled ? "🔊" : "🔇";
     if (!audioEnabled) stopMusic();
@@ -1139,7 +1162,7 @@ document.addEventListener("keydown", (e) => {
 /* click tile -> overlay */
 document.addEventListener("click", (e) => {
   if (!appStarted) return;
-  if (ENABLE_PAGES && performance.now() < suppressClickUntil) {
+  if (performance.now() < suppressClickUntil) {
     e.preventDefault();
     e.stopPropagation();
     return;
@@ -1159,6 +1182,7 @@ document.addEventListener("click", (e) => {
 if (btnRight) {
   btnRight.addEventListener("click", (e) => {
     if (!appStarted) return;
+    if (performance.now() < suppressClickUntil) return;
     e.preventDefault();
     openChannel("#minigame");
   });
@@ -1697,6 +1721,7 @@ function mgGameOverSound() {
 
 window.addEventListener("resize", () => {
   if (document.getElementById("mgCanvas")) mgResizeCanvasForHiDpi();
+  setTileVideoZooms();
 });
 function startApp() {
   if (appStarted) return;
@@ -1704,9 +1729,16 @@ function startApp() {
 
   // chiudi intro
   if (introEl) {
-    introEl.classList.add("is-hidden");
+    introEl.classList.add("is-fading");
     introEl.setAttribute("aria-hidden", "true");
+    window.setTimeout(() => {
+      introEl.classList.add("is-hidden");
+    }, INTRO_HIDE_DELAY_MS);
+    window.setTimeout(() => {
+      document.body?.classList.remove("is-intro-locked");
+    }, INTRO_LOCK_MS);
   }
+  suppressClickUntil = Math.max(suppressClickUntil, performance.now() + INTRO_SUPPRESS_MS);
 
   // audio: se vuoi far partire subito la musica al “click per iniziare”
   // (se preferisci che la musica parta solo col tuo bottone 🔊, commenta queste 2 righe)
@@ -1724,14 +1756,18 @@ function bindIntro() {
     appStarted = true;
     return;
   }
+  document.body?.classList.add("is-intro-locked");
 
   // click/tap ovunque sull’intro
   introEl.addEventListener("click", (e) => {
     e.preventDefault();
+    e.stopPropagation();
     startApp();
   });
   introEl.addEventListener("pointerdown", (e) => {
+    if (e.pointerType === "touch") return;
     e.preventDefault();
+    e.stopPropagation();
     startApp();
   });
 
