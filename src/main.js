@@ -6,6 +6,8 @@ import "./style.css";
 const BASE = import.meta.env.BASE_URL; // es: "/Portfolio_Valerio/"
 const asset = (p) => `${BASE}${p.replace(/^\/+/, "")}`; // normalizza
 const ENABLE_PAGES = false; // quando vorrai 2 pagine: metti true
+const MOBILE_MQ = window.matchMedia("(max-width: 640px)");
+const REDUCED_MOTION_MQ = window.matchMedia("(prefers-reduced-motion: reduce)");
 
 /* =========================
    DOM
@@ -28,6 +30,9 @@ const overlayBody = document.getElementById("overlayBody");
 const pointerEl = document.getElementById("wiiPointer");
 const imgViewer = document.getElementById("imgViewer");
 const imgViewerSrc = document.getElementById("imgViewerSrc");
+const videoViewer = document.getElementById("videoViewer");
+const videoViewerSrc = document.getElementById("videoViewerSrc");
+let videoPreviewItems = [];
 
 /* =========================
    HELPERS
@@ -177,6 +182,7 @@ function renderPage() {
   setupTilePreviewPhases();
   setupTileVideoPreviews();
   setTileVideoZooms();
+  updateVideoPreviewPlayback();
 }
 
 function setupTilePreviewPhases() {
@@ -211,12 +217,15 @@ function setupTileVideoPreviews() {
   if (!grid) return;
 
   const previews = Array.from(grid.querySelectorAll(".wii-preview--video"));
+  videoPreviewItems = [];
   previews.forEach((preview) => {
     const tile = preview.closest(".wii-tile");
     if (!tile) return;
 
     const video = preview.querySelector(".preview-video");
     if (!video) return;
+
+    videoPreviewItems.push({ preview, video });
 
     video.muted = true;
     video.loop = true;
@@ -248,6 +257,20 @@ function setupTileVideoPreviews() {
     tile.addEventListener("pointerleave", stopVid);
     tile.addEventListener("focusin", startVid);
     tile.addEventListener("focusout", stopVid);
+  });
+}
+
+function updateVideoPreviewPlayback() {
+  const autoPlay = MOBILE_MQ.matches && !REDUCED_MOTION_MQ.matches;
+  videoPreviewItems.forEach(({ preview, video }) => {
+    if (autoPlay) {
+      preview.classList.add("is-auto");
+      video.play().catch(() => {});
+    } else {
+      preview.classList.remove("is-auto");
+      video.pause();
+      try { video.currentTime = 0; } catch {}
+    }
   });
 }
 
@@ -550,6 +573,7 @@ const overlayState = {
   projectIndex: 0,
   slideIndex: 0,
   dom: null, // cache carousel nodes
+  videoSectionId: null,
 };
 let bioCarouselTimer = null;
 const LINKEDIN_PROFILE_URL = "https://www.linkedin.com/in/valerio-serani-682a48215/";
@@ -704,16 +728,108 @@ const channelContent = {
 
   "#videos": {
     title: "Video",
-    html: `
-      <div class="wii-card">
-        <h3>Showreel</h3>
-        <p><strong>Selezione</strong> dei progetti <strong>visual</strong> e <strong>ADV</strong> presenti nel portfolio pubblicato su <strong>LinkedIn</strong>, sintetizzati in formato breve.</p>
-      </div>
-      <div class="wii-card">
-        <h3>Underwater</h3>
-        <p><strong>Produzione video</strong> dedicata alle riprese subacquee: <strong>storytelling visivo</strong>, controllo <strong>luce/colore</strong> e contenuti per <strong>social</strong>.</p>
-      </div>
-    `,
+    sections: [
+      {
+        id: "winsmart",
+        title: "Video promozionali / Winsmart",
+        kicker: "Winsmart",
+        summary:
+          "Selezione di video promozionali e contenuti ADV con focus su storytelling, ritmo e messaggio commerciale.",
+        hero: {
+          src: asset("img/01.jpg"),
+          alt: "Hero Winsmart",
+        },
+        videos: [
+          {
+            title: "Promo 01",
+            desc: "Cut breve per social con focus su prodotto e CTA.",
+            src: asset("img/CHANNELS/ai.mp4"),
+            poster: asset("img/PROGETTI/PROG_1.jpg"),
+          },
+          {
+            title: "Promo 02",
+            desc: "Versione dinamica con ritmo piu rapido e titoli.",
+            src: asset("img/CHANNELS/servizi.mp4"),
+            poster: asset("img/PROGETTI/PROG_2.jpg"),
+          },
+        ],
+      },
+      {
+        id: "meschia",
+        title: "Social per Meschia",
+        kicker: "Meschia",
+        summary:
+          "Produzione di lavori social: format brevi, coerenza visiva e adattamenti multi-piattaforma.",
+        hero: {
+          src: asset("img/02.jpg"),
+          alt: "Hero Meschia",
+        },
+        videos: [
+          {
+            title: "Social 01",
+            desc: "Format verticale con palette e typo coerenti al brand.",
+            src: asset("img/CHANNELS/servizi.mp4"),
+            poster: asset("img/PROGETTI/PROG_3.jpg"),
+          },
+          {
+            title: "Social 02",
+            desc: "Teaser breve con focus su prodotto e ritmo.",
+            src: asset("img/CHANNELS/ai.mp4"),
+            poster: asset("img/PROGETTI/PROG_4.jpg"),
+          },
+        ],
+      },
+      {
+        id: "personali",
+        title: "Progetti personali",
+        kicker: "Personal",
+        summary:
+          "Esperimenti e lavori personali: concept, visual design e piccoli short video nati da ricerca creativa.",
+        hero: {
+          src: asset("img/01.jpg"),
+          alt: "Hero Progetti personali",
+        },
+        videos: [
+          {
+            title: "Personal 01",
+            desc: "Studio visivo e composizione per concept personale.",
+            src: asset("img/CHANNELS/ai.mp4"),
+            poster: asset("img/PROGETTI/PROG_7.jpg"),
+          },
+          {
+            title: "Personal 02",
+            desc: "Short video sperimentale con focus su ritmo e mood.",
+            src: asset("img/CHANNELS/servizi.mp4"),
+            poster: asset("img/PROGETTI/PROG_8.jpg"),
+          },
+        ],
+      },
+      {
+        id: "requiem",
+        title: "48h Film Festival - \"Requiem\"",
+        kicker: "48h Film Festival",
+        summary:
+          "Esperienza sul set come aiuto alla fotografia e grafico durante le riprese del corto \"Requiem\".",
+        hero: {
+          src: asset("img/03.jpg"),
+          alt: "Hero Requiem",
+        },
+        videos: [
+          {
+            title: "Backstage 01",
+            desc: "Estratto dal set e supporto al reparto foto.",
+            src: asset("img/CHANNELS/ai.mp4"),
+            poster: asset("img/PROGETTI/PROG_5.jpg"),
+          },
+          {
+            title: "Backstage 02",
+            desc: "Momenti di ripresa e supporto grafico.",
+            src: asset("img/CHANNELS/servizi.mp4"),
+            poster: asset("img/PROGETTI/PROG_6.jpg"),
+          },
+        ],
+      },
+    ],
   },
 
   "#about": {
@@ -727,7 +843,7 @@ const channelContent = {
         </div>
         <div class="bioDesc">
           <h3>Chi sono</h3>
-          <p>Ciao, sono <strong>Valerio</strong>: junior <strong>graphic designer</strong> di <strong>Roma</strong> e autentico nerd. Ho approcciato il design attraverso <strong>videogiochi</strong>, <strong>copertine</strong> e <strong>cultura pop</strong>, trasformando questa passione in un percorso professionale.</p>
+          <p>Ciao, sono <strong>Valerio</strong>: <strong>graphic designer</strong> di <strong>Roma</strong> e autentico nerd. Ho approcciato il design attraverso <strong>videogiochi</strong>, <strong>copertine</strong> e <strong>cultura pop</strong>, trasformando questa passione in un percorso professionale.</p>
           <p>Il mio approccio unisce <strong>sperimentazione</strong>, <strong>rischio</strong> e <strong>senso estetico</strong> per creare output non solo appaganti, ma soprattutto <strong>funzionali</strong>.</p>
           <p>Negli ultimi mesi ho continuato a <strong>sperimentare</strong> con i <strong>video social</strong>: ho curato <strong>fotografia</strong>, <strong>regia</strong> e <strong>montaggio</strong>, uscendo dalla mia <strong>zona di comfort</strong>. Sperimentare e imparare sul campo è la parte che mi entusiasma di più.</p>
           <p class="wii-meta">Lingue: <strong>Italiano C2</strong>, <strong>English B2</strong></p>
@@ -840,9 +956,9 @@ const channelContent = {
         <ul class="wii-list">
           <li><strong>Adobe Suite</strong> (Photoshop, Illustrator, InDesign, After Effects, Premiere Pro).</li>
           <li><strong>Art direction</strong> e <strong>copywriting</strong>.</li>
-          <li><strong>3D</strong>: Cinema4D, Substance Designer, V-Ray, Chitubox.</li>
           <li><strong>Collaborazione</strong>: Figma, Mural, Whimsical.</li>
-          <li><strong>Video art direction</strong> e video editing (ideazione, script, storyboard, montaggio).</li>
+          <li><strong>Video</strong>: art direction + video editing (ideazione, script, storyboard, montaggio), CapCut, editor video social e creazione di <strong>video social funzionali</strong>.</li>
+          <li><strong>AI</strong>: prompting, ideazione, scrittura creativa, ricerca e analisi rapida, workflow AI/web e AI-assisted production per asset e variazioni di layout.</li>
         </ul>
       </div>
     `,
@@ -853,8 +969,9 @@ const channelContent = {
     html: `
       <div class="wii-card">
         <h3>Workflow AI</h3>
-        <p>Sono un <strong>\"AI nerd\"</strong>: uso l'<strong>AI</strong> per <strong>ricerca</strong>, direzione creativa e velocita di esecuzione, mantenendo controllo umano su <strong>concept</strong> e <strong>qualita</strong>. In questo sito applico un <strong>workflow AI/web</strong> completo: revisione contenuti, riscrittura sezioni, struttura della griglia, aggiornamento esperienze e sincronizzazione con <strong>portfolio/CV</strong>. Ho integrato <strong>chat</strong> e <strong>coding</strong> (vibe coding) e un processo a catena tra analisi file, generazione asset, modifiche front-end e test, rendendo questo sito un vero e proprio <strong>showcase</strong> delle mie abilita con l'AI.</p>
-        <p class="wii-meta">Obiettivo: <strong>accelerare tempi</strong> e <strong>qualita</strong>, mantenendo controllo creativo umano su tono, priorita e coerenza finale.</p>
+        <p>sono un <strong>\"AI nerd\"</strong>: uso l'<strong>AI</strong> per <strong>brainstorming</strong>, <strong>scrittura creativa</strong>, <strong>ricerca</strong> e direzione creativa, così da velocizzare l'esecuzione. Mi aiuta a gettare le basi del processo creativo e ad <strong>accelerare i tempi</strong>, mantenendo sempre il controllo umano su <strong>creatività</strong> e <strong>qualità</strong>. Questo sito è il mio <strong>showcase</strong>: è un <strong>esperimento</strong> in cui ho messo in pratica le mie competenze per costruire un progetto completo.</p>
+        <p>Lavoro in <strong>sinergia</strong> tra <strong>Codex</strong> e <strong>Visual Studio Code</strong>: analisi dei file, riscrittura delle sezioni, struttura della griglia, generazione asset e iterazioni rapide. La pubblicazione passa da <strong>GitHub</strong> e il setup tecnico include <strong>Homebrew</strong> e <strong>Vite</strong> per dipendenze e build.</p>
+        <p class="wii-meta">Obiettivo: <strong>accelerare tempi</strong> e <strong>qualità</strong>, mantenendo il controllo creativo umano su tono, priorità e coerenza finale.</p>
       </div>
     `,
   },
@@ -933,6 +1050,99 @@ const channelContent = {
     `,
   },
 };
+
+function getVideoSection(sectionId) {
+  const data = channelContent["#videos"];
+  const sections = data?.sections || [];
+  if (!sections.length) return null;
+  return sections.find((section) => section.id === sectionId) || sections[0];
+}
+
+function renderVideosHub() {
+  if (!overlayBody || !overlayTitle || !overlay) return;
+  const data = channelContent["#videos"];
+  const sections = data?.sections || [];
+  if (!sections.length) return;
+
+  overlayState.videoSectionId = null;
+  overlay.classList.remove("is-video-detail");
+  overlayTitle.textContent = data.title;
+
+  const cardsHtml = sections
+    .map((section) => {
+      const thumbStyle = section.hero?.src
+        ? ` style="--thumb:url('${section.hero.src}')"`
+        : "";
+      return `
+        <button class="wii-card video-hub-card" type="button" data-video-section="${section.id}">
+          <div class="video-hub-thumb"${thumbStyle} aria-hidden="true"></div>
+          <div class="video-hub-copy">
+            <h3>${section.title}</h3>
+          </div>
+        </button>
+      `;
+    })
+    .join("");
+
+  overlayBody.innerHTML = `<div class="video-hub">${cardsHtml}</div>`;
+
+  overlayBody.scrollTop = 0;
+}
+
+function renderVideoSection(sectionId) {
+  if (!overlayBody || !overlayTitle || !overlay) return;
+  const data = channelContent["#videos"];
+  const section = getVideoSection(sectionId);
+  if (!section) return;
+
+  overlayState.videoSectionId = section.id;
+  overlayTitle.textContent = section.title;
+  overlay.classList.add("is-video-detail");
+
+  const heroStyle = section.hero?.src ? ` style="--hero:url('${section.hero.src}')"` : "";
+  const heroAria = section.hero?.alt ? ` role="img" aria-label="${section.hero.alt}"` : "";
+  const videosHtml = (section.videos || [])
+    .map((video) => {
+      const hasSrc = !!video.src;
+      const poster = video.poster || section.hero?.src || "";
+      const thumbStyle = poster ? ` style="--thumb:url('${poster}')"` : "";
+      const dataAttrs = hasSrc
+        ? ` data-video-open data-video-src="${video.src}"${poster ? ` data-video-poster="${poster}"` : ""}`
+        : "";
+      const disabledAttr = hasSrc ? "" : " disabled";
+      const badgeHtml = hasSrc ? "" : `<span class="video-feed-badge">In arrivo</span>`;
+      return `
+        <button class="video-feed-item" type="button"${dataAttrs}${disabledAttr}>
+          <div class="video-feed-thumb"${thumbStyle}>
+            <span class="video-feed-play">▶</span>
+            ${badgeHtml}
+          </div>
+          <div class="video-feed-meta">
+            <h4>${video.title}</h4>
+            ${video.desc ? `<p>${video.desc}</p>` : ""}
+          </div>
+        </button>
+      `;
+    })
+    .join("");
+
+  overlayBody.innerHTML = `
+    <div class="video-detail">
+      <div class="video-hero"${heroStyle}${heroAria}>
+        <div class="video-heroOverlay">
+          <div class="video-heroKicker">${section.kicker || "Video"}</div>
+          <h3>${section.title}</h3>
+          <p>${section.summary}</p>
+        </div>
+      </div>
+      <div class="video-feed">
+        ${videosHtml}
+      </div>
+    </div>
+  `;
+
+  overlayBody.scrollTop = 0;
+}
 
 function renderProjectsCarousel() {
   if (!overlayBody) return;
@@ -1081,6 +1291,7 @@ function openChannel(href) {
   overlay.classList.toggle("is-carousel", href === "#projects");
   overlay.classList.toggle("is-about", href === "#about");
   overlay.classList.toggle("is-exp", href === "#exp");
+  overlay.classList.toggle("is-videos", href === "#videos");
 
   const data = channelContent[href] || {
     title: "Canale",
@@ -1098,6 +1309,8 @@ function openChannel(href) {
   } else if (href === "#about") {
     overlayBody.innerHTML = data.html || "";
     setupBioCarousel();
+  } else if (href === "#videos" && data.sections) {
+    renderVideosHub();
   } else {
     overlayBody.innerHTML = data.html || "";
   }
@@ -1121,16 +1334,26 @@ function closeChannel() {
   if (!overlay) return;
 
   closeMore();
+  closeVideoViewer();
   mgStop(false);
   stopBioCarousel();
+  overlayState.videoSectionId = null;
 
-  overlay.classList.remove("is-open", "is-game", "is-carousel");
+  overlay.classList.remove("is-open", "is-game", "is-carousel", "is-videos", "is-video-detail");
   overlay.setAttribute("aria-hidden", "true");
 
   clickSound();
 }
 
-if (overlayBack) overlayBack.addEventListener("click", closeChannel);
+function handleOverlayBack() {
+  if (overlayState.href === "#videos" && overlay?.classList.contains("is-video-detail")) {
+    renderVideosHub();
+    return;
+  }
+  closeChannel();
+}
+
+if (overlayBack) overlayBack.addEventListener("click", handleOverlayBack);
 
 /* =========================
    Image viewer (full size)
@@ -1151,6 +1374,33 @@ if (imgViewer) {
   imgViewer.addEventListener("click", closeImageViewer);
 }
 
+/* =========================
+   Video viewer (full size)
+========================= */
+function openVideoViewer(src, poster) {
+  if (!videoViewer || !videoViewerSrc || !src) return;
+  videoViewerSrc.src = src;
+  if (poster) videoViewerSrc.setAttribute("poster", poster);
+  else videoViewerSrc.removeAttribute("poster");
+  videoViewer.classList.add("is-open");
+  videoViewer.setAttribute("aria-hidden", "false");
+  try { videoViewerSrc.currentTime = 0; } catch {}
+  videoViewerSrc.play().catch(() => {});
+}
+function closeVideoViewer() {
+  if (!videoViewer || !videoViewerSrc) return;
+  videoViewer.classList.remove("is-open");
+  videoViewer.setAttribute("aria-hidden", "true");
+  videoViewerSrc.pause();
+  videoViewerSrc.removeAttribute("src");
+  videoViewerSrc.load();
+}
+if (videoViewer) {
+  videoViewer.addEventListener("click", (e) => {
+    if (e.target === videoViewer) closeVideoViewer();
+  });
+}
+
 if (overlay) {
   overlay.addEventListener("click", (e) => {
     if (e.target === overlay) closeChannel();
@@ -1158,6 +1408,10 @@ if (overlay) {
 }
 
 document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && videoViewer?.classList.contains("is-open")) {
+    closeVideoViewer();
+    return;
+  }
   if (e.key === "Escape" && imgViewer?.classList.contains("is-open")) {
     closeImageViewer();
     return;
@@ -1196,6 +1450,25 @@ if (btnRight) {
 
 /* Overlay body events (projects controls + click to close more) */
 overlayBody?.addEventListener("click", (e) => {
+  if (overlayState.href === "#videos") {
+    const sectionBtn = e.target?.closest?.("[data-video-section]");
+    if (sectionBtn) {
+      const sectionId = sectionBtn.getAttribute("data-video-section");
+      if (sectionId) renderVideoSection(sectionId);
+      return;
+    }
+
+    const videoBtn = e.target?.closest?.("[data-video-open]");
+    if (videoBtn) {
+      const src = videoBtn.getAttribute("data-video-src");
+      if (src) {
+        const poster = videoBtn.getAttribute("data-video-poster") || "";
+        openVideoViewer(src, poster);
+      }
+      return;
+    }
+  }
+
   // Full image viewer: only for Projects carousel
   if (overlayState.href === "#projects") {
     const frameEl = e.target?.closest?.("[data-ch-frame]");
@@ -1728,6 +2001,7 @@ function mgGameOverSound() {
 window.addEventListener("resize", () => {
   if (document.getElementById("mgCanvas")) mgResizeCanvasForHiDpi();
   setTileVideoZooms();
+  updateVideoPreviewPlayback();
 });
 function startApp() {
   if (appStarted) return;
@@ -1755,6 +2029,7 @@ function startApp() {
   }
 
   clickSound();
+  updateVideoPreviewPlayback();
 }
 
 function bindIntro() {
@@ -1808,3 +2083,11 @@ bindIntro();
 setViewportUnit();
 window.addEventListener("resize", setViewportUnit);
 window.visualViewport?.addEventListener("resize", setViewportUnit);
+
+if (MOBILE_MQ.addEventListener) {
+  MOBILE_MQ.addEventListener("change", updateVideoPreviewPlayback);
+  REDUCED_MOTION_MQ.addEventListener("change", updateVideoPreviewPlayback);
+} else {
+  MOBILE_MQ.addListener(updateVideoPreviewPlayback);
+  REDUCED_MOTION_MQ.addListener(updateVideoPreviewPlayback);
+}
