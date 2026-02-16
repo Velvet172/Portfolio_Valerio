@@ -306,7 +306,10 @@ body{
   filter: blur(1.2px) saturate(0.4) contrast(1.02);
   transform: scale(1.06);
 
-  animation: wiiPreviewFade 12s infinite both;
+  animation-name: var(--preview-anim, wiiPreviewFade);
+  animation-duration: var(--preview-duration, 12s);
+  animation-iteration-count: infinite;
+  animation-fill-mode: both;
   animation-delay: var(--preview-phase, 0s);
 }
 
@@ -346,15 +349,23 @@ body{
 
 /* Stagger: 3 immagini (crossfade morbido e continuo) */
 .wii-preview img:nth-child(1){ animation-delay: calc(var(--preview-phase, 0s) + 0s); }
-.wii-preview img:nth-child(2){ animation-delay: calc(var(--preview-phase, 0s) + 4s); }
-.wii-preview img:nth-child(3){ animation-delay: calc(var(--preview-phase, 0s) + 8s); }
-.wii-preview img:nth-child(4){ animation-delay: calc(var(--preview-phase, 0s) + 12s); }
+.wii-preview img:nth-child(2){ animation-delay: calc(var(--preview-phase, 0s) + var(--preview-step, 4s)); }
+.wii-preview img:nth-child(3){ animation-delay: calc(var(--preview-phase, 0s) + (var(--preview-step, 4s) * 2)); }
+.wii-preview img:nth-child(4){ animation-delay: calc(var(--preview-phase, 0s) + (var(--preview-step, 4s) * 3)); }
 
 @keyframes wiiPreviewFade{
   0%   { opacity: 0; }
   10%  { opacity: .38; }
   30%  { opacity: .38; }
   40%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+@keyframes wiiPreviewFadeTight{
+  0%   { opacity: 0; }
+  8%   { opacity: .38; }
+  22%  { opacity: .38; }
+  30%  { opacity: 0; }
   100% { opacity: 0; }
 }
 
@@ -599,7 +610,7 @@ body{
 }
 
 .wii-overlay.is-exp .wii-overlayBody{
-  overflow: hidden;
+  overflow: auto;
 }
 
 .wii-card{
@@ -944,6 +955,25 @@ body{
   margin-top: 6px;
 }
 
+.chip-list{
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 6px;
+  column-gap: 4px;
+}
+.chip{
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(20,30,50,.12);
+  background: rgba(255,255,255,.75);
+  color: rgba(20,30,50,.78);
+  font-size: 12px;
+  letter-spacing: .01em;
+}
+
 .social-list{
   display: grid;
   gap: 10px;
@@ -1106,6 +1136,14 @@ body{
 
 @media (pointer: fine){
   body, a, button{ cursor: none; }
+  body.is-video-viewer-open #videoViewer,
+  body.is-video-viewer-open #videoViewer *{
+    cursor: auto;
+  }
+  body.is-img-viewer-open #imgViewer,
+  body.is-img-viewer-open #imgViewer *{
+    cursor: auto;
+  }
 }
 
 .wii-pointer{
@@ -1121,6 +1159,10 @@ body{
   filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.18));
   opacity: 0;
   transition: opacity 120ms ease;
+}
+body.is-video-viewer-open .wii-pointer,
+body.is-img-viewer-open .wii-pointer{
+  opacity: 0;
 }
 
 .wii-pointer::before{

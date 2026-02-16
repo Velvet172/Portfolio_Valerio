@@ -92,6 +92,13 @@ const pages = [
       t: "Video",
       s: "Social e progetti",
       href: "#videos",
+      previewAnim: "wiiPreviewFadeTight",
+      previews: [
+        asset("img/CHANNELS/VIDEO/VIDEO PROMO_3-frame.jpg"),
+        asset("img/CHANNELS/VIDEO/meschia-cover.jpg"),
+        asset("img/CHANNELS/VIDEO/PROGETTI PERSONALI_2-frame.jpg"),
+        asset("img/CHANNELS/VIDEO/REQUIEM LOCANDINA.jpg"),
+      ],
     },
 
     {
@@ -107,7 +114,7 @@ const pages = [
       href: "#ai",
       previewVideo: {
         src: asset("img/CHANNELS/ai.mp4"),
-        poster: asset("img/CHANNELS/ai.jpg"),
+        poster: asset("img/CHANNELS/ai-frame.jpg"),
       },
     },
     {
@@ -117,7 +124,7 @@ const pages = [
       href: "#services",
       previewVideo: {
         src: asset("img/CHANNELS/servizi.mp4"),
-        poster: asset("img/CHANNELS/servizi.jpg"),
+        poster: asset("img/CHANNELS/servizi-frame.jpg"),
       },
     },
   ],
@@ -150,6 +157,10 @@ function renderPage() {
       const previews = Array.isArray(x.previews) ? x.previews : [];
       const posterAttr = videoPoster ? ` poster="${videoPoster}"` : "";
       const posterStyle = videoPoster ? ` style="--preview-poster:url('${videoPoster}')"` : "";
+      const previewStyle =
+        previews.length > 1
+          ? ` style="--preview-step:3s; --preview-duration:${previews.length * 3}s${x.previewAnim ? `; --preview-anim:${x.previewAnim}` : ""}"`
+          : "";
       const previewHtml = hasVideoPreview
         ? `
           <div class="wii-preview wii-preview--single wii-preview--video"${posterStyle} aria-hidden="true">
@@ -158,7 +169,7 @@ function renderPage() {
         `
         : previews.length
         ? `
-          <div class="wii-preview ${previews.length === 1 ? "wii-preview--single" : ""}" aria-hidden="true">
+          <div class="wii-preview ${previews.length === 1 ? "wii-preview--single" : ""}"${previewStyle} aria-hidden="true">
             ${previews.map((src) => `<img src="${src}" alt="" loading="lazy" decoding="async">`).join("")}
           </div>
         `
@@ -189,9 +200,12 @@ function setupTilePreviewPhases() {
   if (!grid) return;
 
   const previews = Array.from(grid.querySelectorAll(".wii-preview:not(.wii-preview--single)"));
-  previews.forEach((preview) => {
+  previews.forEach((preview, idx) => {
     // Keep same cycle duration, but shift phase per tile so carousels are not synchronized.
-    const phase = Math.random() * 12;
+    const styles = window.getComputedStyle(preview);
+    const duration = parseFloat(styles.getPropertyValue("--preview-duration")) || 12;
+    const step = parseFloat(styles.getPropertyValue("--preview-step")) || 4;
+    const phase = ((idx + 1) * step * 1.618) % duration;
     preview.style.setProperty("--preview-phase", `-${phase.toFixed(2)}s`);
   });
 }
@@ -365,6 +379,7 @@ function clickSound() {
 
 /* --- Background music (procedurale) --- */
 let musicNodes = null;
+let resumeMusicAfterVideo = false;
 
 function startMusic() {
   const ctx = ensureAudio();
@@ -732,25 +747,44 @@ const channelContent = {
       {
         id: "winsmart",
         title: "Video promozionali / Winsmart",
-        kicker: "Winsmart",
+        kicker: "PROMO",
         summary:
-          "Selezione di video promozionali e contenuti ADV con focus su storytelling, ritmo e messaggio commerciale.",
+          "Selezione di video promozionali, materiali Winsmart e contenuti social: curati interamente montaggio, editing, VFX e musica.",
+        hubThumb: asset("img/CHANNELS/VIDEO/VIDEO PROMO_3-frame.jpg"),
         hero: {
-          src: asset("img/01.jpg"),
+          src: asset("img/CHANNELS/VIDEO/VIDEO PROMO_3-frame.jpg"),
           alt: "Hero Winsmart",
         },
         videos: [
           {
             title: "Promo 01",
             desc: "Cut breve per social con focus su prodotto e CTA.",
-            src: asset("img/CHANNELS/ai.mp4"),
-            poster: asset("img/PROGETTI/PROG_1.jpg"),
+            src: asset("img/CHANNELS/VIDEO/VIDEO PROMO_1.mp4"),
+            poster: asset("img/CHANNELS/VIDEO/VIDEO PROMO_1-frame.jpg"),
           },
           {
             title: "Promo 02",
             desc: "Versione dinamica con ritmo piu rapido e titoli.",
-            src: asset("img/CHANNELS/servizi.mp4"),
-            poster: asset("img/PROGETTI/PROG_2.jpg"),
+            src: asset("img/CHANNELS/VIDEO/VIDEO PROMO_2.mp4"),
+            poster: asset("img/CHANNELS/VIDEO/VIDEO PROMO_2-frame.jpg"),
+          },
+          {
+            title: "Promo 03",
+            desc: "Cut verticale pensato per social con ritmo veloce.",
+            src: asset("img/CHANNELS/VIDEO/VIDEO PROMO_3.mp4"),
+            poster: asset("img/CHANNELS/VIDEO/VIDEO PROMO_3-frame.jpg"),
+          },
+          {
+            title: "Promo 04",
+            desc: "Variante con focus su titoli e prodotto.",
+            src: asset("img/CHANNELS/VIDEO/VIDEO PROMO_4.mp4"),
+            poster: asset("img/CHANNELS/VIDEO/VIDEO PROMO_4-frame.jpg"),
+          },
+          {
+            title: "Promo 05",
+            desc: "Versione verticale con focus su ritmo e callout.",
+            src: asset("img/CHANNELS/VIDEO/VIDEO PROMO_5.mp4"),
+            poster: asset("img/CHANNELS/VIDEO/VIDEO PROMO_5-frame.jpg"),
           },
         ],
       },
@@ -761,21 +795,33 @@ const channelContent = {
         summary:
           "Produzione di lavori social: format brevi, coerenza visiva e adattamenti multi-piattaforma.",
         hero: {
-          src: asset("img/02.jpg"),
+          src: asset("img/CHANNELS/VIDEO/meschia-cover.jpg"),
           alt: "Hero Meschia",
         },
         videos: [
           {
             title: "Social 01",
-            desc: "Format verticale con palette e typo coerenti al brand.",
-            src: asset("img/CHANNELS/servizi.mp4"),
-            poster: asset("img/PROGETTI/PROG_3.jpg"),
+            desc: "Formato verticale con ritmo pensato per social.",
+            src: asset("img/CHANNELS/VIDEO/CADERE_1.mp4"),
+            poster: asset("img/CHANNELS/VIDEO/CADERE_1-frame.jpg"),
           },
           {
             title: "Social 02",
-            desc: "Teaser breve con focus su prodotto e ritmo.",
-            src: asset("img/CHANNELS/ai.mp4"),
-            poster: asset("img/PROGETTI/PROG_4.jpg"),
+            desc: "Cut rapido per mantenere alta l'attenzione.",
+            src: asset("img/CHANNELS/VIDEO/CADERE_2.mp4"),
+            poster: asset("img/CHANNELS/VIDEO/CADERE_2-frame.jpg"),
+          },
+          {
+            title: "Social 03",
+            desc: "Versione teaser con focus su mood e dettagli.",
+            src: asset("img/CHANNELS/VIDEO/CADERE_3.mp4"),
+            poster: asset("img/CHANNELS/VIDEO/CADERE_3-frame.jpg"),
+          },
+          {
+            title: "Social 04",
+            desc: "Variante con taglio finale piu deciso.",
+            src: asset("img/CHANNELS/VIDEO/CADERE_4.mp4"),
+            poster: asset("img/CHANNELS/VIDEO/CADERE_4-frame.jpg"),
           },
         ],
       },
@@ -784,48 +830,50 @@ const channelContent = {
         title: "Progetti personali",
         kicker: "Personal",
         summary:
-          "Esperimenti e lavori personali: concept, visual design e piccoli short video nati da ricerca creativa.",
+          "Esperimenti e lavori accademici: tutto il processo di ideazione, illustrazione e montaggio e stato curato interamente da me.",
+        hubThumb: asset("img/CHANNELS/VIDEO/PROGETTI PERSONALI_2-frame.jpg"),
         hero: {
-          src: asset("img/01.jpg"),
+          src: asset("img/CHANNELS/VIDEO/PROGETTI PERSONALI_1-frame.jpg"),
           alt: "Hero Progetti personali",
         },
         videos: [
           {
             title: "Personal 01",
             desc: "Studio visivo e composizione per concept personale.",
-            src: asset("img/CHANNELS/ai.mp4"),
-            poster: asset("img/PROGETTI/PROG_7.jpg"),
+            src: asset("img/CHANNELS/VIDEO/PROGETTI PERSONALI_1.mp4"),
+            poster: asset("img/CHANNELS/VIDEO/PROGETTI PERSONALI_1-frame.jpg"),
           },
           {
             title: "Personal 02",
             desc: "Short video sperimentale con focus su ritmo e mood.",
-            src: asset("img/CHANNELS/servizi.mp4"),
-            poster: asset("img/PROGETTI/PROG_8.jpg"),
+            src: asset("img/CHANNELS/VIDEO/PROGETTI PERSONALI_2.mp4"),
+            poster: asset("img/CHANNELS/VIDEO/PROGETTI PERSONALI_2-frame.jpg"),
           },
         ],
       },
       {
         id: "requiem",
-        title: "48h Film Festival - \"Requiem\"",
-        kicker: "48h Film Festival",
+        title: "48h Film Project - \"Requiem\"",
+        kicker: "48h Film Project",
         summary:
-          "Esperienza sul set come aiuto alla fotografia e grafico durante le riprese del corto \"Requiem\".",
+          "Esperienza sul set come grafico, backstage e supporto alla fotografia durante le riprese del corto \"Requiem\", diretto da Lorenzo Russo.",
+        hubThumb: asset("img/CHANNELS/VIDEO/REQUIEM LOCANDINA.jpg"),
         hero: {
-          src: asset("img/03.jpg"),
+          src: asset("img/CHANNELS/VIDEO/REQUIEM LOCANDINA.jpg"),
           alt: "Hero Requiem",
         },
         videos: [
           {
-            title: "Backstage 01",
-            desc: "Estratto dal set e supporto al reparto foto.",
-            src: asset("img/CHANNELS/ai.mp4"),
-            poster: asset("img/PROGETTI/PROG_5.jpg"),
+            title: "Backstage",
+            desc: "Estratto dal set, girato e montato.",
+            src: asset("img/CHANNELS/VIDEO/REQUIEM BACKSTAGE.mp4"),
+            poster: asset("img/CHANNELS/VIDEO/REQUIEM BACKSTAGE-frame.jpg"),
           },
           {
-            title: "Backstage 02",
-            desc: "Momenti di ripresa e supporto grafico.",
-            src: asset("img/CHANNELS/servizi.mp4"),
-            poster: asset("img/PROGETTI/PROG_6.jpg"),
+            title: "Locandina",
+            desc: "Locandina ufficiale del corto.",
+            poster: asset("img/CHANNELS/VIDEO/REQUIEM LOCANDINA.jpg"),
+            static: true,
           },
         ],
       },
@@ -928,6 +976,36 @@ const channelContent = {
           <li><strong>AANT</strong> - Accademia delle Arti e Nuove Tecnologie, <strong>Graphic Design</strong> (Nov 2019 - Giu 2022, Roma).</li>
           <li><strong>Liceo Scientifico Francesco d'Assisi</strong> (Set 2012 - Giu 2018, Roma).</li>
         </ul>
+      </div>
+      <div class="wii-card">
+        <h3>Clienti</h3>
+        <p class="wii-meta">Alcuni dei brand e aziende con cui ho lavorato.</p>
+        <div class="chip-list">
+          <span class="chip">M&amp;M&apos;s</span>
+          <span class="chip">Monini</span>
+          <span class="chip">Cesar</span>
+          <span class="chip">Ferrari Hypercar</span>
+          <span class="chip">Control</span>
+          <span class="chip">BOEM</span>
+          <span class="chip">Angelini</span>
+          <span class="chip">OKI</span>
+          <span class="chip">Sensodyne</span>
+          <span class="chip">Mentadent</span>
+          <span class="chip">L&apos;Or</span>
+          <span class="chip">Kellogg&apos;s</span>
+          <span class="chip">Lavazza</span>
+          <span class="chip">Mutti</span>
+          <span class="chip">Peroni</span>
+          <span class="chip">TIM</span>
+          <span class="chip">Telepass</span>
+          <span class="chip">CIF</span>
+          <span class="chip">AMUCHINA</span>
+          <span class="chip">Multicentrum</span>
+          <span class="chip">Algida</span>
+          <span class="chip">WIQO</span>
+          <span class="chip">Sunsilk</span>
+          <span class="chip">Sagre Autentiche</span>
+        </div>
       </div>
     `,
   },
@@ -1070,8 +1148,9 @@ function renderVideosHub() {
 
   const cardsHtml = sections
     .map((section) => {
-      const thumbStyle = section.hero?.src
-        ? ` style="--thumb:url('${section.hero.src}')"`
+      const hubThumb = section.hubThumb || section.hero?.src;
+      const thumbStyle = hubThumb
+        ? ` style="--thumb:url('${hubThumb}')"`
         : "";
       return `
         <button class="wii-card video-hub-card" type="button" data-video-section="${section.id}">
@@ -1104,17 +1183,21 @@ function renderVideoSection(sectionId) {
   const videosHtml = (section.videos || [])
     .map((video) => {
       const hasSrc = !!video.src;
+      const isStatic = !!video.static;
       const poster = video.poster || section.hero?.src || "";
       const thumbStyle = poster ? ` style="--thumb:url('${poster}')"` : "";
       const dataAttrs = hasSrc
         ? ` data-video-open data-video-src="${video.src}"${poster ? ` data-video-poster="${poster}"` : ""}`
-        : "";
-      const disabledAttr = hasSrc ? "" : " disabled";
-      const badgeHtml = hasSrc ? "" : `<span class="video-feed-badge">In arrivo</span>`;
+        : isStatic && poster
+          ? ` data-image-open data-image-src="${poster}"`
+          : "";
+      const disabledAttr = hasSrc || isStatic ? "" : " disabled";
+      const badgeHtml = hasSrc || isStatic ? "" : `<span class="video-feed-badge">In arrivo</span>`;
+      const playHtml = hasSrc ? `<span class="video-feed-play">▶</span>` : "";
       return `
         <button class="video-feed-item" type="button"${dataAttrs}${disabledAttr}>
           <div class="video-feed-thumb"${thumbStyle}>
-            <span class="video-feed-play">▶</span>
+            ${playHtml}
             ${badgeHtml}
           </div>
           <div class="video-feed-meta">
@@ -1360,12 +1443,14 @@ if (overlayBack) overlayBack.addEventListener("click", handleOverlayBack);
 ========================= */
 function openImageViewer(src) {
   if (!imgViewer || !imgViewerSrc || !src) return;
+  document.body?.classList.add("is-img-viewer-open");
   imgViewerSrc.src = src;
   imgViewer.classList.add("is-open");
   imgViewer.setAttribute("aria-hidden", "false");
 }
 function closeImageViewer() {
   if (!imgViewer || !imgViewerSrc) return;
+  document.body?.classList.remove("is-img-viewer-open");
   imgViewer.classList.remove("is-open");
   imgViewer.setAttribute("aria-hidden", "true");
   imgViewerSrc.src = "";
@@ -1379,6 +1464,9 @@ if (imgViewer) {
 ========================= */
 function openVideoViewer(src, poster) {
   if (!videoViewer || !videoViewerSrc || !src) return;
+  document.body?.classList.add("is-video-viewer-open");
+  resumeMusicAfterVideo = !!(audioEnabled && musicNodes);
+  if (resumeMusicAfterVideo) stopMusic();
   videoViewerSrc.src = src;
   if (poster) videoViewerSrc.setAttribute("poster", poster);
   else videoViewerSrc.removeAttribute("poster");
@@ -1389,11 +1477,20 @@ function openVideoViewer(src, poster) {
 }
 function closeVideoViewer() {
   if (!videoViewer || !videoViewerSrc) return;
+  document.body?.classList.remove("is-video-viewer-open");
   videoViewer.classList.remove("is-open");
   videoViewer.setAttribute("aria-hidden", "true");
   videoViewerSrc.pause();
   videoViewerSrc.removeAttribute("src");
   videoViewerSrc.load();
+  if (resumeMusicAfterVideo && audioEnabled) {
+    resumeMusicAfterVideo = false;
+    unlockAudioOnce();
+    unlockAudio();
+    startMusic();
+  } else {
+    resumeMusicAfterVideo = false;
+  }
 }
 if (videoViewer) {
   videoViewer.addEventListener("click", (e) => {
@@ -1455,6 +1552,13 @@ overlayBody?.addEventListener("click", (e) => {
     if (sectionBtn) {
       const sectionId = sectionBtn.getAttribute("data-video-section");
       if (sectionId) renderVideoSection(sectionId);
+      return;
+    }
+
+    const imageBtn = e.target?.closest?.("[data-image-open]");
+    if (imageBtn) {
+      const src = imageBtn.getAttribute("data-image-src");
+      if (src) openImageViewer(src);
       return;
     }
 
