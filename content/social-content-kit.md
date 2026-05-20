@@ -31,7 +31,7 @@ Feedback e confronto sono benvenuti.
 #portfolio #graphicdesign #advertising #branding #uidesign #creativity
 
 ### Instagram (caption carosello)
-Un recap dei progetti che mi rappresentano di piu: visual, campagne e layout.
+Un recap dei progetti che mi rappresentano di più: visual, campagne e layout.
 
 Dal concept al risultato finale, ogni progetto nasce per comunicare in modo chiaro e riconoscibile.
 

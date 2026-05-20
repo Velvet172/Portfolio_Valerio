@@ -619,7 +619,7 @@ const channelContent = {
             what: "Creativity + layout",
             moreHtml: `
               <h3 class="chMoreTitle">Sunsilk — Testata Home</h3>
-              <p class="chMoreText">Ho lavorato al riadattamento degli asset forniti per Smartwin su mobile, mantenendo coerenza visiva e leggibilita tra formati. In diverse occasioni ho curato anche siti dedicati alle promozioni, con focus su gerarchia, adattamento della testata e chiarezza in home.</p>
+              <p class="chMoreText">Ho lavorato al riadattamento degli asset forniti per Smartwin su mobile, mantenendo coerenza visiva e leggibilità tra formati. In diverse occasioni ho curato anche siti dedicati alle promozioni, con focus su gerarchia, adattamento della testata e chiarezza in home.</p>
             `,
           },
           {
@@ -674,12 +674,12 @@ const channelContent = {
           },
           {
             src: asset("img/PROGETTI/PROG_7.jpg"),
-            client: "L'or x Ferrari Hypercar",
+            client: "L'Or x Ferrari Hypercar",
             title: "UX/UI + materiale promozionale",
             what: "Materiale print + landing",
             moreHtml: `
-              <h3 class="chMoreTitle">L'or x Ferrari Hypercar</h3>
-              <p class="chMoreText">Ho lavorato al visual della campagna promozionale italiana, confrontandomi direttamente con Ferrari e L'or per mantenere coerenza tra identità, tono e materiali di comunicazione. L'output finale e stato un sito dedicato alla partecipazione alla promozione.</p>
+              <h3 class="chMoreTitle">L'Or x Ferrari Hypercar</h3>
+              <p class="chMoreText">Ho lavorato al visual della campagna promozionale italiana, confrontandomi direttamente con Ferrari e L'Or per mantenere coerenza tra identità, tono e materiali di comunicazione. L'output finale è stato un sito dedicato alla partecipazione alla promozione.</p>
             `,
           },
           {
@@ -708,8 +708,8 @@ const channelContent = {
             title: "Materiale promozionale",
             what: "Campaign / visual",
             moreHtml: `
-              <h3 class="chMoreTitle">Amucina - materiale promozionale</h3>
-              <p class="chMoreText">Layout e sviluppo di materiali promozionali per Winsmart, adattando i visual di campagna per accompagnare il sito a cui e legata la promozione.</p>
+              <h3 class="chMoreTitle">Amuchina - materiale promozionale</h3>
+              <p class="chMoreText">Layout e sviluppo di materiali promozionali per Winsmart, adattando i visual di campagna per accompagnare il sito a cui è legata la promozione.</p>
             `,
           },
           {
@@ -719,7 +719,7 @@ const channelContent = {
             what: "Visual / layout",
             moreHtml: `
               <h3 class="chMoreTitle">Mentadent — materiali promozionali</h3>
-              <p class="chMoreText">Ho adattato il visual di campagna in materiali Winsmart per una promozione legata al "mese della prevenzione", mantenendo coerenza grafica, leggibilita e chiarezza del messaggio.</p>
+              <p class="chMoreText">Ho adattato il visual di campagna in materiali Winsmart per una promozione legata al "mese della prevenzione", mantenendo coerenza grafica, leggibilità e chiarezza del messaggio.</p>
             `,
           },
           {
@@ -739,7 +739,7 @@ const channelContent = {
             what: "UI / layout",
             moreHtml: `
               <h3 class="chMoreTitle">UILtemp — App Site</h3>
-              <p class="chMoreText">Case UI/layout per sito-app: struttura delle sezioni, chiarezza d'uso e coerenza visiva tra componenti. Ho lavorato anche a diversi materiali print, mantenendo continuita tra comunicazione digitale e supporti fisici.</p>
+              <p class="chMoreText">Case UI/layout per sito-app: struttura delle sezioni, chiarezza d'uso e coerenza visiva tra componenti. Ho lavorato anche a diversi materiali print, mantenendo continuità tra comunicazione digitale e supporti fisici.</p>
             `,
           },
         ],
@@ -770,7 +770,7 @@ const channelContent = {
           },
           {
             title: "Promo 02",
-            desc: "Versione dinamica con ritmo piu rapido e titoli.",
+            desc: "Versione dinamica con ritmo più rapido e titoli.",
             src: asset("img/CHANNELS/VIDEO/VIDEO PROMO_2.mp4"),
             poster: asset("img/CHANNELS/VIDEO/VIDEO PROMO_2-frame.jpg"),
           },
@@ -825,7 +825,7 @@ const channelContent = {
           },
           {
             title: "Social 04",
-            desc: "Variante con taglio finale piu deciso.",
+            desc: "Variante con taglio finale più deciso.",
             src: asset("img/CHANNELS/VIDEO/CADERE_4.mp4"),
             poster: asset("img/CHANNELS/VIDEO/CADERE_4-frame.jpg"),
           },
@@ -852,7 +852,7 @@ const channelContent = {
         title: "Progetti personali",
         kicker: "Personal",
         summary:
-          "Esperimenti e lavori accademici: tutto il processo di ideazione, illustrazione e montaggio e stato curato interamente da me.",
+          "Esperimenti e lavori accademici: tutto il processo di ideazione, illustrazione e montaggio è stato curato interamente da me.",
         hubThumb: asset("img/CHANNELS/VIDEO/PROGETTI PERSONALI_2-frame.jpg"),
         hero: {
           src: asset("img/CHANNELS/VIDEO/PROGETTI PERSONALI_1-frame.jpg"),
@@ -916,7 +916,7 @@ const channelContent = {
           <p>Ciao, sono <strong>Valerio</strong>: <strong>graphic designer</strong> di <strong>Roma</strong> e autentico nerd. Ho approcciato il design attraverso <strong>videogiochi</strong>, <strong>copertine</strong> e <strong>cultura pop</strong>, trasformando questa passione in un percorso professionale.</p>
           <p>Il mio approccio unisce <strong>sperimentazione</strong>, <strong>rischio</strong> e <strong>senso estetico</strong> per creare output non solo appaganti, ma soprattutto <strong>funzionali</strong>.</p>
           <p>Negli ultimi mesi ho continuato a <strong>sperimentare</strong> con i <strong>video social</strong>: ho curato <strong>fotografia</strong>, <strong>regia</strong> e <strong>montaggio</strong>, uscendo dalla mia <strong>zona di comfort</strong>. Sperimentare e imparare sul campo è la parte che mi entusiasma di più.</p>
-          <p class="wii-meta">Lingue: <strong>Italiano C2</strong>, <strong>English B2</strong></p>
+          <p class="wii-meta">Lingue: <strong>Italiano madrelingua</strong>, <strong>English B2</strong></p>
         </div>
       </div>
     `,
@@ -953,7 +953,7 @@ const channelContent = {
     html: `
       <div class="wii-card">
         <h3>Canali social</h3>
-        <p>Qui trovi tutti i miei social: raccontano la mia parte piu professionale e quella piu ludica. Passione e lavoro sono sempre andati di pari passo nella mia vita, e qui li vedi convivere.</p>
+        <p>Qui trovi tutti i miei social: raccontano la mia parte più professionale e quella più ludica. Passione e lavoro sono sempre andati di pari passo nella mia vita, e qui li vedi convivere.</p>
         <div class="social-list">
           <a class="social-item" href="${LINKEDIN_PROFILE_URL}" target="_blank" rel="noopener noreferrer">
             <span class="social-ico">💼</span>
@@ -990,14 +990,14 @@ const channelContent = {
           <li>Collaborazione con <strong>team creativo</strong> per <strong>concept</strong> in linea con esigenze <strong>marketing</strong> e <strong>branding</strong>.</li>
           <li>Realizzazione <strong>materiali grafici</strong> per campagne pubblicitarie, promozione e social.</li>
           <li>Progettazione <strong>layout</strong> per sito web, social media e newsletter.</li>
-          <li>Gestione file per <strong>produzione</strong> e coordinamento qualita con attenzione al dettaglio.</li>
+          <li>Gestione file per <strong>produzione</strong> e coordinamento qualità con attenzione al dettaglio.</li>
           <li>Supporto nella creazione <strong>contenuti visivi</strong> per eventi e promozioni aziendali.</li>
         </ul>
       </div>
       <div class="wii-card">
         <h3>Formazione</h3>
         <ul class="wii-list">
-          <li><strong>LEARNN</strong> - Percorsi completati su <strong>marketing digitale</strong>, <strong>social media</strong>, <strong>AI</strong> e produttivita creativa.</li>
+          <li><strong>LEARNN</strong> - Percorsi completati su <strong>marketing digitale</strong>, <strong>social media</strong>, <strong>AI</strong> e produttività creativa.</li>
           <li>Corso <strong>Digital Skills</strong>, <strong>Marketing</strong>, <strong>SEO</strong> (LV8 Certification Badge, Roma).</li>
           <li><strong>NFT e Metaverso</strong> con Davide Cardea (Giu 2022, Roma).</li>
           <li><strong>AANT</strong> - Accademia delle Arti e Nuove Tecnologie, <strong>Graphic Design</strong> (Nov 2019 - Giu 2022, Roma).</li>
@@ -1074,7 +1074,7 @@ const channelContent = {
     html: `
       <div class="wii-card">
         <h3>Workflow AI</h3>
-        <p>sono un <strong>\"AI nerd\"</strong>: uso l'<strong>AI</strong> per <strong>brainstorming</strong>, <strong>scrittura creativa</strong>, <strong>ricerca</strong> e direzione creativa, così da velocizzare l'esecuzione. Mi aiuta a gettare le basi del processo creativo e ad <strong>accelerare i tempi</strong>, mantenendo sempre il controllo umano su <strong>creatività</strong> e <strong>qualità</strong>. Questo sito è il mio <strong>showcase</strong>: è un <strong>esperimento</strong> in cui ho messo in pratica le mie competenze per costruire un progetto completo.</p>
+        <p>Sono un <strong>\"AI nerd\"</strong>: uso l'<strong>AI</strong> per <strong>brainstorming</strong>, <strong>scrittura creativa</strong>, <strong>ricerca</strong> e direzione creativa, così da velocizzare l'esecuzione. Mi aiuta a gettare le basi del processo creativo e ad <strong>accelerare i tempi</strong>, mantenendo sempre il controllo umano su <strong>creatività</strong> e <strong>qualità</strong>. Questo sito è il mio <strong>showcase</strong>: è un <strong>esperimento</strong> in cui ho messo in pratica le mie competenze per costruire un progetto completo.</p>
         <p>Lavoro in <strong>sinergia</strong> tra <strong>Codex</strong> e <strong>Visual Studio Code</strong>: analisi dei file, riscrittura delle sezioni, struttura della griglia, generazione asset e iterazioni rapide. La pubblicazione passa da <strong>GitHub</strong> e il setup tecnico include <strong>Homebrew</strong> e <strong>Vite</strong> per dipendenze e build.</p>
         <p class="wii-meta">Obiettivo: <strong>accelerare tempi</strong> e <strong>qualità</strong>, mantenendo il controllo creativo umano su tono, priorità e coerenza finale.</p>
       </div>
@@ -1086,7 +1086,7 @@ const channelContent = {
     html: `
       <div class="wii-card">
         <h3>Automotive Visuals</h3>
-        <p>Canale dedicato a contenuti automotive: visual campaign, branding e creativita per officine o brand di settore.</p>
+        <p>Canale dedicato a contenuti automotive: visual campaign, branding e creatività per officine o brand di settore.</p>
       </div>
     `,
   },
@@ -1108,11 +1108,11 @@ const channelContent = {
         <h3>In evidenza dal portfolio</h3>
         <ul class="wii-list">
           <li>Visione creativa ispirata a cultura pop, videogiochi e fumetti.</li>
-          <li>Ricerca di equilibrio tra sperimentazione e funzionalita.</li>
+          <li>Ricerca di equilibrio tra sperimentazione e funzionalità.</li>
           <li>Esperienza attiva come Graphic Designer Jr.</li>
           <li>Background accademico in Graphic Design.</li>
           <li>Competenze trasversali tra ADV, digital layout, social e video direction.</li>
-          <li>Soft skills: teamwork, empatia, problem solving, creativita.</li>
+          <li>Soft skills: teamwork, empatia, problem solving, creatività.</li>
         </ul>
       </div>
     `,
@@ -1747,6 +1747,7 @@ if (ENABLE_PAGES && boardEl) {
 let tx = 0, ty = 0;
 let cx = 0, cy = 0;
 let visible = false;
+let pointerInitialized = false;
 let lastPointerType = "mouse";
 let currentHoverEl = null;
 
@@ -1764,8 +1765,8 @@ function hidePointer() {
 }
 
 function animatePointer() {
-  cx += (tx - cx) * 0.18;
-  cy += (ty - cy) * 0.18;
+  cx += (tx - cx) * 0.42;
+  cy += (ty - cy) * 0.42;
 
   const offsetX = -10;
   const offsetY = -4;
@@ -1783,6 +1784,11 @@ window.addEventListener("pointermove", (e) => {
   }
   tx = e.clientX;
   ty = e.clientY;
+  if (!pointerInitialized) {
+    cx = tx;
+    cy = ty;
+    pointerInitialized = true;
+  }
   showPointer();
 });
 
