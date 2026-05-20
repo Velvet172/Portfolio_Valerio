@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>RS Portfolio — Wii-ish UI</title>
-    <script type="module" crossorigin src="/Portfolio_Valerio/assets/index-DC2Kofg-.js"></script>
-    <link rel="stylesheet" crossorigin href="/Portfolio_Valerio/assets/index-DAVXOXxw.css">
+    <script type="module" crossorigin src="/Portfolio_Valerio/assets/index-DWZmuPkC.js"></script>
+    <link rel="stylesheet" crossorigin href="/Portfolio_Valerio/assets/index-BrkgQ73f.css">
   </head>
 
   <body>
@@ -31,13 +31,16 @@
 
       <!-- FOOTER (sempre in basso) -->
       <footer class="wii-bar" aria-label="Barra inferiore">
-        <button class="wii-pill" id="btnLeft" type="button" aria-label="Audio">
-          🔊
-        </button>
+        <div class="wii-barLeft">
+          <button class="wii-pill" id="btnLeft" type="button" aria-label="Audio">
+            🔊
+          </button>
 
-        <a class="wii-pill wii-pillLink" href="/Portfolio_Valerio/Valerio-Serani-CV.pdf" download>
-          Scarica CV
-        </a>
+          <a class="wii-pill wii-pillLink" href="/Portfolio_Valerio/Valerio-Serani-CV.pdf" download aria-label="Scarica CV">
+            <span class="cvLabelFull">Scarica CV</span>
+            <span class="cvLabelShort" aria-hidden="true">CV</span>
+          </a>
+        </div>
 
         <div class="wii-clock" aria-label="Orologio">
           <div class="wii-time" id="time">--:--</div>
