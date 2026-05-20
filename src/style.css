@@ -1454,9 +1454,10 @@ body.is-img-viewer-open .wii-pointer{
   .wii-sub{ font-size: 10.5px; margin-top: 2px; text-align: center; }
   .wii-tileText{ align-items: center; text-align: center; }
 
-  .wii-bar{ padding: 8px 10px; }
-  .wii-pill{ height: 36px; min-width: 70px; padding: 0 12px; }
-  .wii-clock{ min-width: 120px; }
+  .wii-bar{ gap: 6px; padding: 8px 10px; }
+  .wii-pill{ height: 36px; min-width: 44px; padding: 0 10px; }
+  .wii-pillLink{ min-width: 86px; font-size: 12px; }
+  .wii-clock{ min-width: 104px; }
 
   /* Esperienze: compattare per mobile, evitare overflow */
   .wii-overlay.is-exp .wii-overlayPanel{
@@ -1523,7 +1524,10 @@ body.is-img-viewer-open .wii-pointer{
   .wii-icon{ width: 34px; height: 34px; font-size: 16px; }
   .wii-title{ font-size: 12.5px; }
   .wii-sub{ font-size: 10px; }
-  .wii-pill{ height: 34px; min-width: 64px; }
+  .wii-bar{ gap: 5px; padding-inline: 8px; }
+  .wii-pill{ height: 34px; min-width: 40px; padding: 0 8px; }
+  .wii-pillLink{ min-width: 78px; font-size: 11px; }
+  .wii-clock{ min-width: 94px; }
 }
 /* =========================
    Overlay: PROJECTS CAROUSEL
