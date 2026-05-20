@@ -1229,9 +1229,15 @@ const channelContent = {
   },
 
   "#minigame": {
-    title: "Bubble Pop",
+    title: "Giochi",
     html: `
       <div class="mg">
+        <div class="mgSwitch" aria-label="Seleziona gioco">
+          <button class="wii-pill mgArrow" id="mgPrevGame" type="button" aria-label="Gioco precedente">◀</button>
+          <div class="mgGameTitle" id="mgGameTitle">Bubble Pop</div>
+          <button class="wii-pill mgArrow" id="mgNextGame" type="button" aria-label="Gioco successivo">▶</button>
+        </div>
+
         <div class="mgHud">
           <div class="mgStats">
             <div class="mgStat"><span>Punteggio:</span> <b id="mgScore">0</b></div>
@@ -1260,7 +1266,7 @@ const channelContent = {
           </div>
         </div>
 
-        <div class="mgHelp">Clicca le bolle prima che scadano i 30 secondi.</div>
+        <div class="mgHelp" id="mgHelp">Clicca le bolle prima che scadano i 30 secondi.</div>
       </div>
     `,
   },
@@ -1955,23 +1961,42 @@ document.addEventListener("pointerup", () => {
    (il tuo codice invariato)
 ========================= */
 let mg = {
+  gameIndex: 0,
+  gameMode: "bubble",
   running: false,
   score: 0,
   timeLeft: 30,
   lastTs: 0,
   spawnAcc: 0,
   bubbles: [],
+  stars: [],
+  paddleX: 0.5,
   rafId: null,
   timerId: null,
   canvas: null,
   ctx: null,
   scoreEl: null,
   timeEl: null,
+  titleEl: null,
+  helpEl: null,
   overEl: null,
   overScoreEl: null,
   overRestartBtn: null,
   overCloseBtn: null,
 };
+
+const mgGames = [
+  {
+    mode: "bubble",
+    title: "Bubble Pop",
+    help: "Clicca le bolle prima che scadano i 30 secondi.",
+  },
+  {
+    mode: "star",
+    title: "Star Catch",
+    help: "Muovi il puntatore per prendere le stelle. Evita quelle rosse.",
+  },
+];
 
 function mgHideGameOver() {
   if (!mg.overEl) return;
@@ -1989,6 +2014,8 @@ function mgSetupDom() {
   mg.canvas = document.getElementById("mgCanvas");
   mg.scoreEl = document.getElementById("mgScore");
   mg.timeEl = document.getElementById("mgTime");
+  mg.titleEl = document.getElementById("mgGameTitle");
+  mg.helpEl = document.getElementById("mgHelp");
 
   mg.overEl = document.getElementById("mgOver");
   mg.overScoreEl = document.getElementById("mgOverScore");
@@ -1997,6 +2024,8 @@ function mgSetupDom() {
 
   const startBtn = document.getElementById("mgStart");
   const resetBtn = document.getElementById("mgReset");
+  const prevBtn = document.getElementById("mgPrevGame");
+  const nextBtn = document.getElementById("mgNextGame");
 
   if (!mg.canvas) return false;
   mg.ctx = mg.canvas.getContext("2d");
@@ -2013,12 +2042,25 @@ function mgSetupDom() {
     mg.overCloseBtn.onclick = () => closeChannel();
   }
 
+  mg.canvas.onpointermove = (e) => {
+    if (mg.gameMode !== "star") return;
+
+    const rect = mg.canvas.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * mg.canvas.width;
+    mg.paddleX = clamp(x / mg.canvas.width, 0.06, 0.94);
+  };
+
   mg.canvas.onpointerdown = (e) => {
     if (!mg.running) return;
 
     const rect = mg.canvas.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * mg.canvas.width;
     const y = ((e.clientY - rect.top) / rect.height) * mg.canvas.height;
+
+    if (mg.gameMode === "star") {
+      mg.paddleX = clamp(x / mg.canvas.width, 0.06, 0.94);
+      return;
+    }
 
     for (let i = mg.bubbles.length - 1; i >= 0; i--) {
       const b = mg.bubbles[i];
@@ -2036,9 +2078,27 @@ function mgSetupDom() {
 
   if (startBtn) startBtn.onclick = () => mgStart();
   if (resetBtn) resetBtn.onclick = () => mgReset();
+  if (prevBtn) prevBtn.onclick = () => mgSwitchGame(-1);
+  if (nextBtn) nextBtn.onclick = () => mgSwitchGame(1);
 
   mgResizeCanvasForHiDpi();
+  mgApplyGameUi();
   return true;
+}
+
+function mgApplyGameUi() {
+  const game = mgGames[mg.gameIndex] || mgGames[0];
+  mg.gameMode = game.mode;
+  if (mg.titleEl) mg.titleEl.textContent = game.title;
+  if (mg.helpEl) mg.helpEl.textContent = game.help;
+  if (overlayTitle) overlayTitle.textContent = "Giochi";
+}
+
+function mgSwitchGame(dir) {
+  mg.gameIndex = (mg.gameIndex + dir + mgGames.length) % mgGames.length;
+  mgApplyGameUi();
+  mgReset();
+  clickSound();
 }
 
 function mgResizeCanvasForHiDpi() {
@@ -2064,6 +2124,8 @@ function mgReset() {
   mg.score = 0;
   mg.timeLeft = 30;
   mg.bubbles = [];
+  mg.stars = [];
+  mg.paddleX = 0.5;
   if (mg.scoreEl) mg.scoreEl.textContent = "0";
   if (mg.timeEl) mg.timeEl.textContent = "30";
   mgDraw();
@@ -2127,6 +2189,19 @@ function mgSpawnBubble() {
   mg.bubbles.push({ x, y, r, vx, vy, born: performance.now(), life });
 }
 
+function mgSpawnStar() {
+  if (!mg.canvas) return;
+  const w = mg.canvas.width;
+  const bad = Math.random() < 0.22;
+  const size = (bad ? 18 : 16) + Math.random() * 12;
+  const x = size + Math.random() * (w - size * 2);
+  const y = -size;
+  const speed = 110 + Math.random() * 120 + (30 - mg.timeLeft) * 3;
+  const vy = speed * (window.devicePixelRatio || 1);
+  const drift = (-30 + Math.random() * 60) * (window.devicePixelRatio || 1);
+  mg.stars.push({ x, y, size, vy, drift, bad, rot: Math.random() * Math.PI * 2 });
+}
+
 function mgLoop(ts) {
   if (!mg.running) return;
 
@@ -2134,6 +2209,12 @@ function mgLoop(ts) {
   mg.lastTs = ts;
 
   mgResizeCanvasForHiDpi();
+
+  if (mg.gameMode === "star") {
+    mgLoopStars(dt);
+    mg.rafId = requestAnimationFrame(mgLoop);
+    return;
+  }
 
   const difficulty = 1 + (30 - mg.timeLeft) * 0.03;
   const spawnEvery = 0.55 / difficulty;
@@ -2162,6 +2243,48 @@ function mgLoop(ts) {
   mg.rafId = requestAnimationFrame(mgLoop);
 }
 
+function mgLoopStars(dt) {
+  if (!mg.canvas) return;
+
+  const difficulty = 1 + (30 - mg.timeLeft) * 0.035;
+  const spawnEvery = 0.62 / difficulty;
+  mg.spawnAcc += dt;
+  while (mg.spawnAcc >= spawnEvery) {
+    mg.spawnAcc -= spawnEvery;
+    mgSpawnStar();
+  }
+
+  const w = mg.canvas.width;
+  const h = mg.canvas.height;
+  const paddleW = Math.max(92, w * 0.16);
+  const paddleH = Math.max(18, h * 0.035);
+  const paddleX = mg.paddleX * w;
+  const paddleY = h - paddleH * 3.2;
+
+  for (let i = mg.stars.length - 1; i >= 0; i--) {
+    const s = mg.stars[i];
+    s.y += s.vy * dt;
+    s.x += s.drift * dt;
+    s.rot += dt * 2.4;
+
+    const hitX = Math.abs(s.x - paddleX) <= paddleW * 0.55 + s.size * 0.4;
+    const hitY = Math.abs(s.y - paddleY) <= paddleH * 1.2 + s.size * 0.5;
+    if (hitX && hitY) {
+      mg.stars.splice(i, 1);
+      mg.score += s.bad ? -2 : 1;
+      mg.score = Math.max(0, mg.score);
+      if (mg.scoreEl) mg.scoreEl.textContent = String(mg.score);
+      if (s.bad) mgBadSound();
+      else mgPopSound();
+      continue;
+    }
+
+    if (s.y - s.size > h) mg.stars.splice(i, 1);
+  }
+
+  mgDraw();
+}
+
 function mgDraw() {
   if (!mg.ctx || !mg.canvas) return;
 
@@ -2172,6 +2295,11 @@ function mgDraw() {
   ctx.clearRect(0, 0, w, h);
   ctx.fillStyle = "rgba(255,255,255,0.22)";
   ctx.fillRect(0, 0, w, h);
+
+  if (mg.gameMode === "star") {
+    mgDrawStars(ctx, w, h);
+    return;
+  }
 
   for (const b of mg.bubbles) {
     const g = ctx.createRadialGradient(
@@ -2196,6 +2324,72 @@ function mgDraw() {
     ctx.fillStyle = "rgba(255,255,255,0.28)";
     ctx.fill();
   }
+}
+
+function mgDrawStars(ctx, w, h) {
+  const sky = ctx.createLinearGradient(0, 0, 0, h);
+  sky.addColorStop(0, "rgba(218,244,255,0.70)");
+  sky.addColorStop(1, "rgba(255,255,255,0.38)");
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, w, h);
+
+  for (const s of mg.stars) {
+    mgDrawStarShape(ctx, s.x, s.y, s.size, s.rot, s.bad);
+  }
+
+  const paddleW = Math.max(92, w * 0.16);
+  const paddleH = Math.max(18, h * 0.035);
+  const x = mg.paddleX * w;
+  const y = h - paddleH * 3.2;
+
+  ctx.save();
+  ctx.translate(x, y);
+  const g = ctx.createLinearGradient(0, -paddleH, 0, paddleH);
+  g.addColorStop(0, "rgba(255,255,255,0.94)");
+  g.addColorStop(1, "rgba(43,184,255,0.30)");
+  ctx.fillStyle = g;
+  ctx.strokeStyle = "rgba(43,184,255,0.42)";
+  ctx.lineWidth = 2;
+  mgRoundRect(ctx, -paddleW / 2, -paddleH / 2, paddleW, paddleH, paddleH / 2);
+  ctx.fill();
+  ctx.stroke();
+  ctx.restore();
+}
+
+function mgDrawStarShape(ctx, x, y, r, rot, bad) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(rot);
+  ctx.beginPath();
+  for (let i = 0; i < 10; i += 1) {
+    const a = -Math.PI / 2 + i * Math.PI / 5;
+    const rr = i % 2 === 0 ? r : r * 0.45;
+    const px = Math.cos(a) * rr;
+    const py = Math.sin(a) * rr;
+    if (i === 0) ctx.moveTo(px, py);
+    else ctx.lineTo(px, py);
+  }
+  ctx.closePath();
+  ctx.fillStyle = bad ? "rgba(255,96,96,0.78)" : "rgba(255,218,80,0.86)";
+  ctx.strokeStyle = bad ? "rgba(160,30,40,0.35)" : "rgba(180,130,20,0.32)";
+  ctx.lineWidth = 2;
+  ctx.fill();
+  ctx.stroke();
+  ctx.restore();
+}
+
+function mgRoundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
 }
 
 function mgPopSound() {
@@ -2246,6 +2440,28 @@ function mgGameOverSound() {
     o.start(t);
     o.stop(t + 0.18);
   });
+}
+
+function mgBadSound() {
+  const ctx = ensureAudio();
+  if (!ctx) return;
+
+  const t0 = ctx.currentTime;
+  const o = ctx.createOscillator();
+  const g = ctx.createGain();
+
+  o.type = "sawtooth";
+  o.frequency.setValueAtTime(180, t0);
+  o.frequency.exponentialRampToValueAtTime(90, t0 + 0.10);
+
+  g.gain.setValueAtTime(0.0001, t0);
+  g.gain.exponentialRampToValueAtTime(0.035, t0 + 0.008);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.14);
+
+  o.connect(g);
+  g.connect(ctx.destination);
+  o.start(t0);
+  o.stop(t0 + 0.16);
 }
 
 window.addEventListener("resize", () => {
