@@ -414,9 +414,9 @@ body{
   background: linear-gradient(180deg, rgba(255,255,255,.70), rgba(255,255,255,.40));
   box-shadow: 0 18px 40px rgba(0,0,0,.12);
 
-  display:flex;
+  display:grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items:center;
-  justify-content:space-between;
   gap: 14px;
 
   overflow:hidden;
@@ -449,12 +449,25 @@ body{
   color: rgba(26,36,51,.72);
   transition: transform .14s ease, box-shadow .14s ease, border-color .14s ease;
 }
+.wii-barLeft{
+  position: relative;
+  z-index: 1;
+  justify-self: start;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
 .wii-pillLink{
   display: inline-flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
   white-space: nowrap;
+}
+
+.cvLabelShort{
+  display: none;
 }
 
 .wii-pill:hover{
@@ -470,12 +483,18 @@ body{
 .wii-clock{
   position: relative;
   z-index: 1;
+  grid-column: 2;
+  justify-self: center;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
   gap: 2px;
   min-width: 160px;
+}
+
+#btnRight{
+  justify-self: end;
 }
 
 .wii-time{
@@ -1455,8 +1474,11 @@ body.is-img-viewer-open .wii-pointer{
   .wii-tileText{ align-items: center; text-align: center; }
 
   .wii-bar{ gap: 6px; padding: 8px 10px; }
+  .wii-barLeft{ gap: 6px; }
   .wii-pill{ height: 36px; min-width: 44px; padding: 0 10px; }
-  .wii-pillLink{ min-width: 86px; font-size: 12px; }
+  .wii-pillLink{ min-width: 48px; font-size: 12px; }
+  .cvLabelFull{ display: none; }
+  .cvLabelShort{ display: inline; }
   .wii-clock{ min-width: 104px; }
 
   /* Esperienze: compattare per mobile, evitare overflow */
@@ -1525,8 +1547,9 @@ body.is-img-viewer-open .wii-pointer{
   .wii-title{ font-size: 12.5px; }
   .wii-sub{ font-size: 10px; }
   .wii-bar{ gap: 5px; padding-inline: 8px; }
+  .wii-barLeft{ gap: 5px; }
   .wii-pill{ height: 34px; min-width: 40px; padding: 0 8px; }
-  .wii-pillLink{ min-width: 78px; font-size: 11px; }
+  .wii-pillLink{ min-width: 42px; font-size: 11px; }
   .wii-clock{ min-width: 94px; }
 }
 /* =========================
