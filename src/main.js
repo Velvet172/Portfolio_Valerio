@@ -395,149 +395,257 @@ function startMusic() {
   musicGain.gain.value = 0.0;
   musicGain.connect(ctx.destination);
 
-  const delay = ctx.createDelay(0.35);
-  delay.delayTime.value = 0.18;
+  const toneBus = ctx.createGain();
+  toneBus.gain.value = 0.82;
+
+  const toneFilter = ctx.createBiquadFilter();
+  toneFilter.type = "lowpass";
+  toneFilter.frequency.value = 3100;
+  toneFilter.Q.value = 0.55;
+
+  const delay = ctx.createDelay(0.8);
+  delay.delayTime.value = 0.36;
 
   const fb = ctx.createGain();
-  fb.gain.value = 0.20;
+  fb.gain.value = 0.18;
+  const delayMix = ctx.createGain();
+  delayMix.gain.value = 0.34;
+
+  toneBus.connect(toneFilter);
+  toneFilter.connect(musicGain);
+  toneFilter.connect(delay);
   delay.connect(fb);
   fb.connect(delay);
-
-  const delayMix = ctx.createGain();
-  delayMix.gain.value = 0.25;
-
-  const lp = ctx.createBiquadFilter();
-  lp.type = "lowpass";
-  lp.frequency.value = 2600;
-  lp.Q.value = 0.7;
-
-  lp.connect(musicGain);
-  lp.connect(delay);
   delay.connect(delayMix);
   delayMix.connect(musicGain);
 
-  const drone = ctx.createOscillator();
-  drone.type = "sine";
-  drone.frequency.value = 130.81;
-
-  const droneGain = ctx.createGain();
-  droneGain.gain.value = 0.0001;
-  drone.connect(droneGain);
-  droneGain.connect(lp);
-
-  const lfo = ctx.createOscillator();
-  lfo.type = "sine";
-  lfo.frequency.value = 0.08;
-
-  const lfoGain = ctx.createGain();
-  lfoGain.gain.value = 0.007;
-  lfo.connect(lfoGain);
-  lfoGain.connect(droneGain.gain);
-
   const t0 = ctx.currentTime;
-  drone.start(t0);
-  lfo.start(t0);
 
-  function bellNote(freq, when, vel = 0.05) {
+  const air = ctx.createOscillator();
+  air.type = "sine";
+  air.frequency.value = 261.63;
+
+  const airGain = ctx.createGain();
+  airGain.gain.value = 0.0001;
+
+  const airLfo = ctx.createOscillator();
+  airLfo.type = "sine";
+  airLfo.frequency.value = 0.045;
+
+  const airLfoGain = ctx.createGain();
+  airLfoGain.gain.value = 0.012;
+
+  air.connect(airGain);
+  airLfo.connect(airLfoGain);
+  airLfoGain.connect(airGain.gain);
+  airGain.connect(toneBus);
+  air.start(t0);
+  airLfo.start(t0);
+  airGain.gain.setTargetAtTime(0.010, t0 + 0.2, 1.8);
+
+  function ping(freq, when, vel = 0.035, length = 0.34) {
     const o = ctx.createOscillator();
     const g = ctx.createGain();
     const hp = ctx.createBiquadFilter();
 
-    o.type = "triangle";
+    o.type = "sine";
     o.frequency.setValueAtTime(freq, when);
+    o.frequency.exponentialRampToValueAtTime(freq * 1.004, when + length);
 
     hp.type = "highpass";
-    hp.frequency.setValueAtTime(240, when);
+    hp.frequency.setValueAtTime(420, when);
 
     g.gain.setValueAtTime(0.0001, when);
-    g.gain.exponentialRampToValueAtTime(vel, when + 0.01);
-    g.gain.exponentialRampToValueAtTime(0.0001, when + 0.22);
+    g.gain.exponentialRampToValueAtTime(vel, when + 0.018);
+    g.gain.exponentialRampToValueAtTime(0.0001, when + length);
 
     o.connect(hp);
     hp.connect(g);
-    g.connect(lp);
+    g.connect(toneBus);
 
     o.start(when);
-    o.stop(when + 0.30);
+    o.stop(when + length + 0.04);
   }
 
-  function bassNote(freq, when, vel = 0.018) {
+  function chordBloom(freqs, when, vel = 0.018) {
+    freqs.forEach((freq, i) => {
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      const lp2 = ctx.createBiquadFilter();
+
+      o.type = i === 1 ? "triangle" : "sine";
+      o.frequency.setValueAtTime(freq, when);
+      o.detune.setValueAtTime((i - 1) * 4, when);
+
+      lp2.type = "lowpass";
+      lp2.frequency.setValueAtTime(1350, when);
+
+      g.gain.setValueAtTime(0.0001, when);
+      g.gain.exponentialRampToValueAtTime(vel, when + 0.12 + i * 0.03);
+      g.gain.exponentialRampToValueAtTime(0.0001, when + 1.7);
+
+      o.connect(lp2);
+      lp2.connect(g);
+      g.connect(toneBus);
+      o.start(when);
+      o.stop(when + 1.9);
+    });
+  }
+
+  function bubble(freq, when, vel = 0.016) {
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    const bp = ctx.createBiquadFilter();
+
+    o.type = "triangle";
+    o.frequency.setValueAtTime(freq * 0.72, when);
+    o.frequency.exponentialRampToValueAtTime(freq, when + 0.16);
+
+    bp.type = "bandpass";
+    bp.frequency.setValueAtTime(freq * 2.2, when);
+    bp.Q.setValueAtTime(1.2, when);
+
+    g.gain.setValueAtTime(0.0001, when);
+    g.gain.exponentialRampToValueAtTime(vel, when + 0.025);
+    g.gain.exponentialRampToValueAtTime(0.0001, when + 0.30);
+
+    o.connect(bp);
+    bp.connect(g);
+    g.connect(toneBus);
+    o.start(when);
+    o.stop(when + 0.34);
+  }
+
+  function bassPuff(freq, when, vel = 0.012) {
     const o = ctx.createOscillator();
     const g = ctx.createGain();
     const lp2 = ctx.createBiquadFilter();
 
     o.type = "sine";
     o.frequency.setValueAtTime(freq, when);
+    o.frequency.exponentialRampToValueAtTime(freq * 0.995, when + 0.42);
 
     lp2.type = "lowpass";
-    lp2.frequency.setValueAtTime(520, when);
+    lp2.frequency.setValueAtTime(360, when);
 
     g.gain.setValueAtTime(0.0001, when);
-    g.gain.exponentialRampToValueAtTime(vel, when + 0.008);
-    g.gain.exponentialRampToValueAtTime(0.0001, when + 0.18);
+    g.gain.exponentialRampToValueAtTime(vel, when + 0.04);
+    g.gain.exponentialRampToValueAtTime(0.0001, when + 0.48);
 
     o.connect(lp2);
     lp2.connect(g);
-    g.connect(lp);
+    g.connect(toneBus);
 
     o.start(when);
-    o.stop(when + 0.22);
+    o.stop(when + 0.52);
   }
 
-  const chords = [
-    { tones: [261.63, 329.63, 392.0], bass: 130.81 },
-    { tones: [349.23, 440.0, 523.25], bass: 174.61 },
-    { tones: [220.0, 261.63, 329.63], bass: 110.0 },
-    { tones: [196.0, 246.94, 293.66], bass: 98.0 },
-  ];
-
-  const patterns = [
-    [0, 1, 2, 1, 0, 2, 1, 2],
-    [0, 2, 1, 2, 0, 1, 2, 1],
-    [0, 1, 0, 2, 1, 2, 1, 0],
-  ];
-
-  const stepMs = 300;
-  const stepsPerBar = 8;
-  const barsPerChord = 2;
-
-  let stepIndex = 0;
-  let barIndex = 0;
-  let chordIndex = 0;
-  let patternIndex = 0;
-
-  function step() {
-    if (!audioEnabled || !audioCtx || !musicNodes) return;
-
-    const now = audioCtx.currentTime;
-    const chord = chords[chordIndex % chords.length];
-    const pat = patterns[patternIndex % patterns.length];
-
-    const posInBar = stepIndex % stepsPerBar;
-    const toneIdx = pat[posInBar] % chord.tones.length;
-    const freq = chord.tones[toneIdx];
-
-    const vel = posInBar === 0 ? 0.058 : posInBar === 4 ? 0.050 : 0.040;
-
-    bellNote(freq, now + 0.01, vel);
-    if (posInBar === 0) bassNote(chord.bass, now + 0.01, 0.016);
-    if (Math.random() < 0.10) bellNote(freq * 2, now + 0.06, 0.026);
-
-    stepIndex += 1;
-
-    if (stepIndex % stepsPerBar === 0) {
-      barIndex += 1;
-      if (barIndex % 2 === 0) patternIndex = (patternIndex + 1) % patterns.length;
-      if (barIndex % barsPerChord === 0) chordIndex = (chordIndex + 1) % chords.length;
+  function hush(when, vel = 0.006) {
+    const len = Math.max(1, Math.floor(ctx.sampleRate * 0.08));
+    const buffer = ctx.createBuffer(1, len, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < len; i += 1) {
+      const fade = 1 - i / len;
+      data[i] = (Math.random() * 2 - 1) * fade * fade * fade;
     }
 
-    musicNodes.timerId = window.setTimeout(step, stepMs);
+    const src = ctx.createBufferSource();
+    const g = ctx.createGain();
+    const hp = ctx.createBiquadFilter();
+    hp.type = "highpass";
+    hp.frequency.value = 5200;
+
+    g.gain.setValueAtTime(vel, when);
+    g.gain.exponentialRampToValueAtTime(0.0001, when + 0.09);
+
+    src.buffer = buffer;
+    src.connect(hp);
+    hp.connect(g);
+    g.connect(toneBus);
+    src.start(when);
   }
 
-  musicNodes = { musicGain, lp, delay, fb, delayMix, drone, droneGain, lfo, timerId: null };
-  step();
+  const palette = [
+    { chord: [261.63, 329.63, 392.0], bass: 130.81, motif: [392.0, 523.25, 493.88, 329.63] },
+    { chord: [293.66, 369.99, 440.0], bass: 146.83, motif: [440.0, 587.33, 554.37, 369.99] },
+    { chord: [220.0, 329.63, 392.0], bass: 110.0, motif: [329.63, 440.0, 392.0, 261.63] },
+    { chord: [246.94, 293.66, 392.0], bass: 123.47, motif: [392.0, 493.88, 587.33, 493.88] },
+  ];
 
-  musicGain.gain.setTargetAtTime(0.400, ctx.currentTime, 0.7);
+  const phrase = [
+    { beat: 0, kind: "chord" },
+    { beat: 1, kind: "lead", note: 0 },
+    { beat: 2.5, kind: "bubble", note: 1 },
+    { beat: 4, kind: "lead", note: 2 },
+    { beat: 5.5, kind: "hush" },
+    { beat: 7, kind: "lead", note: 3 },
+    { beat: 8, kind: "chord" },
+    { beat: 9.5, kind: "bubble", note: 2 },
+    { beat: 11, kind: "lead", note: 1 },
+    { beat: 13.5, kind: "hush" },
+  ];
+
+  const beatMs = 380;
+  const phraseBeats = 16;
+  let phraseIndex = 0;
+
+  function schedulePhrase() {
+    if (!audioEnabled || !audioCtx || !musicNodes) return;
+
+    const now = audioCtx.currentTime + 0.03;
+    const section = palette[phraseIndex % palette.length];
+    const nextSection = palette[(phraseIndex + 1) % palette.length];
+
+    air.frequency.setTargetAtTime(section.chord[0], now, 0.8);
+    bassPuff(section.bass, now + 0.02, 0.010);
+
+    phrase.forEach((event) => {
+      const when = now + event.beat * (beatMs / 1000);
+      if (event.kind === "chord") {
+        chordBloom(event.beat >= 8 ? nextSection.chord : section.chord, when, 0.014);
+        bassPuff(event.beat >= 8 ? nextSection.bass : section.bass, when + 0.04, 0.009);
+        return;
+      }
+
+      if (event.kind === "lead") {
+        const note = section.motif[event.note % section.motif.length];
+        ping(note, when, event.beat === 1 ? 0.038 : 0.030, 0.42);
+        if (Math.random() < 0.35) ping(note * 1.5, when + 0.18, 0.014, 0.28);
+        return;
+      }
+
+      if (event.kind === "bubble") {
+        bubble(section.motif[event.note % section.motif.length], when, 0.014);
+        return;
+      }
+
+      hush(when, 0.005);
+    });
+
+    if (Math.random() < 0.55) {
+      const note = section.motif[Math.floor(Math.random() * section.motif.length)];
+      bubble(note * 2, now + (14.5 + Math.random()) * (beatMs / 1000), 0.010);
+    }
+
+    phraseIndex += 1;
+    musicNodes.timerId = window.setTimeout(schedulePhrase, phraseBeats * beatMs);
+  }
+
+  musicNodes = {
+    musicGain,
+    toneBus,
+    toneFilter,
+    delay,
+    fb,
+    delayMix,
+    air,
+    airGain,
+    airLfo,
+    timerId: null,
+  };
+  schedulePhrase();
+
+  musicGain.gain.setTargetAtTime(0.360, ctx.currentTime, 0.9);
 }
 
 function stopMusic() {
@@ -549,8 +657,8 @@ function stopMusic() {
   musicNodes.musicGain.gain.setTargetAtTime(0.0001, t, 0.25);
 
   setTimeout(() => {
-    try { musicNodes.drone?.stop(); } catch {}
-    try { musicNodes.lfo?.stop(); } catch {}
+    try { musicNodes.air?.stop(); } catch {}
+    try { musicNodes.airLfo?.stop(); } catch {}
     musicNodes = null;
   }, 400);
 }
@@ -910,6 +1018,8 @@ const channelContent = {
           <img class="bioMedia" src="${asset("img/BIO/BIO_1.jpg")}" alt="" loading="lazy" decoding="async">
           <img class="bioMedia" src="${asset("img/BIO/BIO_2.jpg")}" alt="" loading="lazy" decoding="async">
           <img class="bioMedia" src="${asset("img/BIO/BIO_3.jpg")}" alt="" loading="lazy" decoding="async">
+          <img class="bioMedia" src="${asset("img/BIO/BIO_4.jpg")}" alt="" loading="lazy" decoding="async">
+          <img class="bioMedia" src="${asset("img/BIO/BIO_5.jpg")}" alt="" loading="lazy" decoding="async">
         </div>
         <div class="bioDesc">
           <h3>Chi sono</h3>
@@ -1045,7 +1155,7 @@ const channelContent = {
         <ul class="wii-list">
           <li><strong>Visual design</strong> per campagne <strong>ADV</strong> e social.</li>
           <li><strong>Art direction</strong> e sviluppo <strong>concept</strong>.</li>
-          <li><strong>Layout</strong> per sito, newsletter e contenuti digital.</li>
+          <li><strong>Layout</strong> per sito, newsletter e contenuti digitali.</li>
           <li>Adattamenti creativi <strong>multi-formato</strong> (print e digital).</li>
           <li>Supporto al team marketing con output orientati alla <strong>comunicazione</strong> e alla funzione.</li>
         </ul>
