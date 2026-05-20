@@ -319,6 +319,34 @@ body{
   filter: saturate(0.75) contrast(1.02) blur(0.8px);
 }
 
+.wii-preview--icon{
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(60,180,255,.24), rgba(60,180,255,0) 42%),
+    linear-gradient(135deg, rgba(255,255,255,.76), rgba(225,236,248,.58));
+}
+.wii-preview--icon span{
+  display: grid;
+  place-items: center;
+  width: min(42%, 86px);
+  aspect-ratio: 1;
+  border-radius: 24px;
+  border: 1px solid rgba(60,180,255,.22);
+  background: linear-gradient(180deg, rgba(255,255,255,.74), rgba(255,255,255,.30));
+  box-shadow:
+    0 18px 38px rgba(30,70,110,.16),
+    inset 0 1px 0 rgba(255,255,255,.88);
+  font-size: clamp(34px, 8vw, 52px);
+  filter: saturate(.9);
+  transform: translateY(-4px);
+  transition: transform 180ms ease, filter 180ms ease;
+}
+.wii-tile:hover .wii-preview--icon span{
+  filter: saturate(1.12);
+  transform: translateY(-6px) scale(1.04);
+}
+
 .wii-preview--video{
   background: #111a2a;
   background-image: var(--preview-poster, none);
@@ -423,6 +451,13 @@ body{
   font-weight: 800;
   color: rgba(26,36,51,.72);
   transition: transform .14s ease, box-shadow .14s ease, border-color .14s ease;
+}
+.wii-pillLink{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  white-space: nowrap;
 }
 
 .wii-pill:hover{
@@ -723,6 +758,23 @@ body{
     radial-gradient(120% 85% at 50% 90%, rgba(0,0,0,.68), rgba(0,0,0,0) 58%),
     linear-gradient(0deg, rgba(0,0,0,.45), rgba(0,0,0,0) 60%);
 }
+.video-hub-label{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  transform: translate(-50%, -50%) rotate(-8deg);
+  padding: 8px 12px;
+  border: 2px solid rgba(255,255,255,.92);
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 10px rgba(0,0,0,.45);
+  box-shadow: 0 10px 28px rgba(0,0,0,.22), inset 0 0 0 1px rgba(255,255,255,.22);
+}
 .video-hub-copy{
   position: absolute;
   left: 0;
@@ -739,6 +791,13 @@ body{
   margin: 0;
   font-size: 14px;
   letter-spacing: .2px;
+}
+.video-hub-copy p{
+  margin: 4px 0 0;
+  max-width: 34ch;
+  font-size: 11px;
+  line-height: 1.25;
+  color: rgba(255,255,255,.88);
 }
 
 .video-detail{

@@ -173,7 +173,11 @@ function renderPage() {
             ${previews.map((src) => `<img src="${src}" alt="" loading="lazy" decoding="async">`).join("")}
           </div>
         `
-        : "";
+        : `
+          <div class="wii-preview wii-preview--icon" aria-hidden="true">
+            <span>${x.icon}</span>
+          </div>
+        `;
 
       return `
         <a class="wii-tile" href="${x.href}" data-href="${x.href}">
@@ -609,31 +613,31 @@ const channelContent = {
           {
             src: asset("img/PROGETTI/PROG_1.jpg"),
             client: "Sunsilk",
-            title: "Testata Home 2025",
+            title: "Materiali promozionali",
             what: "Creativity + layout",
             moreHtml: `
               <h3 class="chMoreTitle">Sunsilk — Testata Home</h3>
-              <p class="chMoreText">Progetto estratto dal portfolio accademico pubblicato su LinkedIn. Focus su gerarchia visiva, adattamento testata e leggibilità in home.</p>
+              <p class="chMoreText">Ho lavorato al riadattamento degli asset forniti per Smartwin su mobile, mantenendo coerenza visiva e leggibilita tra formati. In diverse occasioni ho curato anche siti dedicati alle promozioni, con focus su gerarchia, adattamento della testata e chiarezza in home.</p>
             `,
           },
           {
             src: asset("img/PROGETTI/PROG_2.jpg"),
             client: "M&M’s / UCI",
             title: "Screentime Cinema",
-            what: "Layout + output ADV",
+            what: "Layout + output video",
             moreHtml: `
               <h3 class="chMoreTitle">M&M’s / UCI — Screentime</h3>
-              <p class="chMoreText">Studio ADV dedicato al formato cinema: impaginazione del messaggio, bilanciamento brand/prodotto e output orientato alla visibilità.</p>
+              <p class="chMoreText">Studio ADV dedicato al formato cinema: impaginazione del messaggio, bilanciamento brand/prodotto e sviluppo dell'output definitivo, un video promozionale trasmesso negli UCI Cinema italiani.</p>
             `,
           },
           {
             src: asset("img/PROGETTI/PROG_3.jpg"),
-            client: "Cliente",
-            title: "Visual",
+            client: "PAM",
+            title: "Sito + materiale promozionale",
             what: "Creativity / design",
             moreHtml: `
-              <h3 class="chMoreTitle">Visual</h3>
-              <p class="chMoreText">Concept visual con approccio design-first: direzione creativa, composizione e resa finale pensata per contenuti social e digital.</p>
+              <h3 class="chMoreTitle">PAM — San Valentino</h3>
+              <p class="chMoreText">Concept visual con approccio design-first: direzione creativa, composizione e sviluppo dell'output definitivo, un sito promozionale speciale dedicato a San Valentino.</p>
             `,
           },
           {
@@ -643,13 +647,13 @@ const channelContent = {
             what: "Visual + layout",
             moreHtml: `
               <h3 class="chMoreTitle">Snickers / Twix</h3>
-              <p class="chMoreText">Adattamento cover multi-brand con attenzione a consistenza grafica, impatto del key visual e coerenza tra linee prodotto.</p>
+              <p class="chMoreText">Visual ideato per la back cover di un magazine di settore: adattamento multi-brand con attenzione a consistenza grafica, impatto del key visual e coerenza tra linee prodotto.</p>
             `,
           },
           {
             src: asset("img/PROGETTI/PROG_5.jpg"),
             client: "Compeed",
-            title: "Volantino Stop Brufoli",
+            title: "Materiale promozionale",
             what: "Print / layout",
             moreHtml: `
               <h3 class="chMoreTitle">Compeed — Volantino</h3>
@@ -659,71 +663,71 @@ const channelContent = {
           {
             src: asset("img/PROGETTI/PROG_6.jpg"),
             client: "Boem",
-            title: "Visual",
+            title: "Materiale promozionale",
             what: "Brand / creative",
             moreHtml: `
               <h3 class="chMoreTitle">Boem</h3>
-              <p class="chMoreText">Esplorazione brand/creative: ricerca di tono visivo, elementi distintivi e applicazione coerente su formato statico.</p>
+              <p class="chMoreText">Con Boem ci sono state diverse occasioni di lavoro: materiale print, diversi siti e materiale promozionale, mantenendo coerenza visiva tra formati e punti di contatto.</p>
             `,
           },
           {
             src: asset("img/PROGETTI/PROG_7.jpg"),
-            client: "Landing",
-            title: "Carousel",
-            what: "UI / layout",
+            client: "L'or x Ferrari Hypercar",
+            title: "UX/UI + materiale promozionale",
+            what: "Materiale print + landing",
             moreHtml: `
-              <h3 class="chMoreTitle">Landing Carousel</h3>
-              <p class="chMoreText">Proposta UI per carousel in landing: ordine dei contenuti, ritmo di navigazione e leggibilità mobile-first.</p>
+              <h3 class="chMoreTitle">L'or x Ferrari Hypercar</h3>
+              <p class="chMoreText">Ho lavorato al visual della campagna promozionale italiana, confrontandomi direttamente con Ferrari e L'or per mantenere coerenza tra identità, tono e materiali di comunicazione. L'output finale e stato un sito dedicato alla partecipazione alla promozione.</p>
             `,
           },
           {
             src: asset("img/PROGETTI/PROG_8.jpg"),
-            client: "Cartolina",
-            title: "Fronte",
+            client: "Degustazioni a corte",
+            title: "Produzione materiali evento",
             what: "Print / design",
             moreHtml: `
-              <h3 class="chMoreTitle">Cartolina</h3>
-              <p class="chMoreText">Output editoriale/print con focus su layout, equilibrio tipografico e resa visiva immediata sul formato ridotto.</p>
+              <h3 class="chMoreTitle">Degustazioni a corte</h3>
+              <p class="chMoreText">Ho curato tutti i materiali necessari all'evento "Degustazioni a corte": cartoline, photo frame, striscioni e altri supporti di comunicazione, rinnovando anche il logo per l'edizione 2025.</p>
             `,
           },
           {
             src: asset("img/PROGETTI/PROG_9.jpg"),
             client: "Control",
-            title: "Visual",
+            title: "Materiale promozionale",
             what: "Brand / layout",
             moreHtml: `
               <h3 class="chMoreTitle">Control</h3>
-              <p class="chMoreText">Visual brand-oriented sviluppato per rafforzare riconoscibilità e chiarezza del messaggio in ambiente digitale.</p>
+              <p class="chMoreText">Con Control ci sono state diverse occasioni di lavoro: materiali promozionali, siti, visual di campagna e adattamenti di volantini, sviluppati mantenendo coerenza con le direttive del brand e chiarezza sui diversi formati.</p>
             `,
           },
           {
             src: asset("img/PROGETTI/PROG_10.jpg"),
             client: "Amuchina",
-            title: "Hai Vinto",
+            title: "Materiale promozionale",
             what: "Campaign / visual",
             moreHtml: `
-              <h3 class="chMoreTitle">Amuchina — Hai Vinto</h3>
-              <p class="chMoreText">Creatività per campagna promozionale: headline e visual impostati per immediatezza, impatto e lettura rapida.</p>
+              <h3 class="chMoreTitle">Amucina - materiale promozionale</h3>
+              <p class="chMoreText">Layout e sviluppo di materiali promozionali per Winsmart, adattando i visual di campagna per accompagnare il sito a cui e legata la promozione.</p>
             `,
           },
           {
             src: asset("img/PROGETTI/PROG_11.jpg"),
-            client: "Campagna",
-            title: "Hai Vinto",
+            client: "Mentadent",
+            title: "Materiali promozionali",
             what: "Visual / layout",
             moreHtml: `
-              <h3 class="chMoreTitle">Hai Vinto</h3>
-              <p class="chMoreText">Variante visual della campagna con focus su adattamento grafico, coerenza narrativa e pulizia compositiva.</p>
+              <h3 class="chMoreTitle">Mentadent — materiali promozionali</h3>
+              <p class="chMoreText">Ho adattato il visual di campagna in materiali Winsmart per una promozione legata al "mese della prevenzione", mantenendo coerenza grafica, leggibilita e chiarezza del messaggio.</p>
             `,
           },
           {
             src: asset("img/PROGETTI/PROG_12.jpg"),
-            client: "Testata Home",
-            title: "Visual",
-            what: "Layout / design",
+            client: "Snickers",
+            title: "Materiale promozionale",
+            what: "Layout + video promozionale",
             moreHtml: `
-              <h3 class="chMoreTitle">Testata Home</h3>
-              <p class="chMoreText">Sviluppo testata in piu varianti: priorita ai contenuti, bilanciamento spazi e ottimizzazione dell'impatto above-the-fold.</p>
+              <h3 class="chMoreTitle">Snickers - materiale promozionale</h3>
+              <p class="chMoreText">Ho lavorato alla creazione di materiali Winsmart e video promozionali per la campagna, curando adattamenti visual, layout e output pensati per mantenere il messaggio chiaro e riconoscibile sui diversi formati.</p>
             `,
           },
           {
@@ -733,7 +737,7 @@ const channelContent = {
             what: "UI / layout",
             moreHtml: `
               <h3 class="chMoreTitle">UILtemp — App Site</h3>
-              <p class="chMoreText">Case UI/layout per sito-app: struttura delle sezioni, chiarezza d'uso e coerenza visiva tra componenti.</p>
+              <p class="chMoreText">Case UI/layout per sito-app: struttura delle sezioni, chiarezza d'uso e coerenza visiva tra componenti. Ho lavorato anche a diversi materiali print, mantenendo continuita tra comunicazione digitale e supporti fisici.</p>
             `,
           },
         ],
@@ -802,8 +806,8 @@ const channelContent = {
           {
             title: "Social 01",
             desc: "Formato verticale con ritmo pensato per social.",
-            src: asset("img/CHANNELS/VIDEO/CADERE_1.mp4"),
-            poster: asset("img/CHANNELS/VIDEO/CADERE_1-frame.jpg"),
+            src: asset("img/CHANNELS/VIDEO/MESCHIA_SOCIAL_01.mp4"),
+            poster: asset("img/CHANNELS/VIDEO/MESCHIA_SOCIAL_01-frame.jpg"),
           },
           {
             title: "Social 02",
@@ -822,6 +826,22 @@ const channelContent = {
             desc: "Variante con taglio finale piu deciso.",
             src: asset("img/CHANNELS/VIDEO/CADERE_4.mp4"),
             poster: asset("img/CHANNELS/VIDEO/CADERE_4-frame.jpg"),
+          },
+        ],
+      },
+      {
+        id: "meschia-videoclip",
+        title: "Videoclip",
+        kicker: "Meschia",
+        hubLabel: "Coming soon",
+        hubDesc:
+          "Ho lavorato al videoclip di una canzone di Meschia, in uscita il 12 giugno.",
+        summary:
+          "Ho lavorato al videoclip di una canzone di Meschia, in uscita il 12 giugno.",
+        videos: [
+          {
+            title: "Coming soon",
+            desc: "Videoclip di una canzone di Meschia in uscita il 12 giugno.",
           },
         ],
       },
@@ -908,6 +928,11 @@ const channelContent = {
         <p><strong>Email</strong>: <a href="mailto:${EMAIL}">${EMAIL}</a></p>
         <p><strong>Telefono</strong>: <a href="tel:${PHONE.replace(/\s+/g, "")}">${PHONE}</a></p>
         <p class="wii-meta">Base: <strong>Roma</strong></p>
+        <div class="wii-links">
+          <a class="wii-link" href="${asset("Valerio-Serani-CV.pdf")}" download>
+            Scarica CV
+          </a>
+        </div>
       </div>
       <div class="wii-card">
         <h3>Profilo LinkedIn</h3>
@@ -1154,9 +1179,12 @@ function renderVideosHub() {
         : "";
       return `
         <button class="wii-card video-hub-card" type="button" data-video-section="${section.id}">
-          <div class="video-hub-thumb"${thumbStyle} aria-hidden="true"></div>
+          <div class="video-hub-thumb"${thumbStyle} aria-hidden="true">
+            ${section.hubLabel ? `<span class="video-hub-label">${section.hubLabel}</span>` : ""}
+          </div>
           <div class="video-hub-copy">
             <h3>${section.title}</h3>
+            ${section.hubDesc ? `<p>${section.hubDesc}</p>` : ""}
           </div>
         </button>
       `;
