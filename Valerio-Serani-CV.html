@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CV - Valerio Serani</title>
+    <style>
+      @page {
+        size: A4;
+        margin: 15mm;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        color: #182334;
+        background:
+          radial-gradient(circle at 18% 8%, rgba(120, 78, 214, .10), transparent 30%),
+          radial-gradient(circle at 92% 8%, rgba(43, 184, 255, .14), transparent 32%),
+          #eef6fc;
+        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.42;
+      }
+      .cv {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 26px 30px;
+        background:
+          linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,252,255,.98));
+      }
+      header {
+        display: grid;
+        grid-template-columns: 112px 1fr .72fr;
+        gap: 18px;
+        padding-bottom: 16px;
+        border-bottom: 2px solid #cfe9f8;
+        align-items: center;
+      }
+      .portrait {
+        width: 112px;
+        height: 112px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid rgba(255,255,255,.94);
+        outline: 2px solid rgba(43,184,255,.42);
+        box-shadow: 0 16px 34px rgba(30,70,110,.18);
+      }
+      h1 {
+        margin: 0;
+        font-size: 38px;
+        line-height: 1;
+        letter-spacing: 0;
+      }
+      .role {
+        margin: 8px 0 0;
+        color: #146487;
+        font-size: 17px;
+        font-weight: 800;
+      }
+      .intro {
+        margin: 14px 0 0;
+        font-size: 13px;
+        color: #435366;
+      }
+      .contacts {
+        display: grid;
+        gap: 5px;
+        align-content: start;
+        justify-items: end;
+        font-size: 12px;
+        color: #435366;
+      }
+      .contacts a {
+        color: #146487;
+        text-decoration: none;
+      }
+      main {
+        display: grid;
+        grid-template-columns: 1fr .62fr;
+        gap: 20px;
+        padding-top: 18px;
+      }
+      section {
+        break-inside: avoid;
+        margin-bottom: 15px;
+      }
+      h2 {
+        margin: 0 0 13px;
+        color: #146487;
+        font-size: 13px;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+      }
+      h3 {
+        margin: 0 0 4px;
+        font-size: 15px;
+      }
+      .experience-extra {
+        margin-top: 10px;
+      }
+      p {
+        margin: 0 0 8px;
+      }
+      ul {
+        margin: 0;
+        padding-left: 18px;
+      }
+      li {
+        margin: 0 0 5px;
+      }
+      .meta {
+        color: #697789;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .card {
+        padding: 11px 12px;
+        border: 1px solid #dbeaf4;
+        border-radius: 8px;
+        background:
+          radial-gradient(circle at 0% 0%, rgba(43,184,255,.10), transparent 34%),
+          linear-gradient(180deg, #ffffff, #f8fbfe);
+      }
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+        min-height: 21px;
+        padding: 3px 8px 4px;
+        border: 1px solid #d7e8f2;
+        border-radius: 999px;
+        color: #284258;
+        background: #f4fafe;
+        font-size: 11px;
+        line-height: 1.1;
+        font-weight: 700;
+        text-align: center;
+      }
+      .brand-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 8px;
+        color: #284258;
+        font-size: 11px;
+        font-weight: 800;
+        line-height: 1.35;
+      }
+      .brand-item:not(:last-child)::after {
+        content: "·";
+        margin-left: 8px;
+        color: #57bfea;
+      }
+      .qr-box {
+        display: grid;
+        gap: 6px;
+        justify-items: start;
+        margin-top: 12px;
+      }
+      .qr-box img {
+        width: 96px;
+        height: 96px;
+        border: 1px solid #b9dff3;
+        background: #fff;
+      }
+      .qr-box p {
+        margin: 0;
+        color: #435366;
+        font-size: 10px;
+        line-height: 1.25;
+      }
+      .side section {
+        margin-bottom: 15px;
+      }
+      .formation-section {
+        margin-top: 10px;
+      }
+      @media print {
+        body {
+          background: #ffffff;
+        }
+        .cv {
+          padding: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="cv">
+      <header>
+        <img class="portrait" src="img/CV/valerio-cv-portrait-original.jpg" alt="Valerio Serani" />
+        <div>
+          <h1>Valerio Serani</h1>
+          <p class="role">Graphic Designer | Visual, ADV, digital layout e video social</p>
+          <p class="intro">Graphic designer di Roma con esperienza su <strong>campagne promozionali</strong>, materiali <strong>print e digital</strong>, siti dedicati a concorsi/promozioni e <strong>contenuti video</strong>. Unisco <strong>cultura pop</strong>, sperimentazione e attenzione alla funzione per creare output chiari, coerenti e pronti per il canale finale.</p>
+        </div>
+        <div class="contacts">
+          <span>Roma, Italia</span>
+          <a href="mailto:valerioserani@gmail.com">valerioserani@gmail.com</a>
+          <a href="tel:+393469697747">+39 346 969 7747</a>
+          <a href="https://www.linkedin.com/posts/valerio-serani-682a48215_portfolio-accademico-activity-7130600228142915584-dVM3">LinkedIn</a>
+          <a href="https://www.behance.net/velvet172">Behance</a>
+          <div class="qr-box">
+            <img src="img/CV/portfolio-qr.svg" alt="QR portfolio online" />
+            <p>Portfolio online<br />velvet172.github.io/Portfolio_Valerio</p>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <div>
+          <section>
+            <h2>Esperienza</h2>
+            <div class="card">
+              <h3>Graphic Designer Jr - Cube Proemotion</h3>
+              <p class="meta">Gen 2024 - Gen 2026 | Roma</p>
+              <ul>
+                <li>Creazione di <strong>materiali grafici</strong> per campagne pubblicitarie, promozioni, social e canali digitali.</li>
+                <li>Progettazione di <strong>layout</strong> per siti promozionali, landing, newsletter e <strong>materiali Winsmart</strong>.</li>
+                <li>Adattamento di visual <strong>multi-formato</strong> per print e digital, mantenendo coerenza con le direttive dei <strong>brand</strong>.</li>
+                <li>Supporto a team creativi e marketing su <strong>concept</strong>, gerarchia visiva, leggibilita e preparazione file.</li>
+                <li>Produzione di contenuti <strong>video social</strong> e promozionali, con attenzione a ritmo, montaggio e output finale.</li>
+              </ul>
+              <h3 class="experience-extra">Creator social/video freelance</h3>
+              <p class="meta">Feb 2025 - Presente | Roma</p>
+              <ul>
+                <li>Sperimentazione su contenuti <strong>social</strong> e video verticali, curando <strong>fotografia, regia e montaggio</strong>.</li>
+                <li>Ideazione di <strong>format brevi</strong> con attenzione a ritmo, mood, storytelling e resa multi-piattaforma.</li>
+              </ul>
+            </div>
+          </section>
+
+          <section>
+            <h2>Metodo di lavoro</h2>
+            <div class="card">
+              <p>Parto dal <strong>messaggio</strong> e dal contesto d'uso: cosa deve capire l'utente, dove vedra il contenuto e quale azione deve compiere. Da qui costruisco <strong>gerarchia</strong>, ritmo visivo e adattamenti per formato.</p>
+              <p>Lavoro bene in dialogo con <strong>team creativi</strong> e marketing: raccolgo vincoli, linee guida e asset esistenti, poi li trasformo in materiali <strong>leggibili, coerenti e pronti per produzione</strong>.</p>
+              <p>Uso <strong>sperimentazione</strong>, <strong>AI workflow</strong> e cultura visiva come acceleratori, mantenendo sempre controllo umano su tono, qualita e funzione finale.</p>
+            </div>
+          </section>
+
+          <section>
+            <h2>Aziende e brand</h2>
+            <div class="brand-list">
+              <span class="brand-item">M&amp;M&apos;s</span>
+              <span class="brand-item">Monini</span>
+              <span class="brand-item">Cesar</span>
+              <span class="brand-item">Ferrari Hypercar</span>
+              <span class="brand-item">Control</span>
+              <span class="brand-item">BOEM</span>
+              <span class="brand-item">Angelini</span>
+              <span class="brand-item">OKI</span>
+              <span class="brand-item">Sensodyne</span>
+              <span class="brand-item">Mentadent</span>
+              <span class="brand-item">L&apos;Or</span>
+              <span class="brand-item">Kellogg&apos;s</span>
+              <span class="brand-item">Lavazza</span>
+              <span class="brand-item">Mutti</span>
+              <span class="brand-item">Peroni</span>
+              <span class="brand-item">TIM</span>
+              <span class="brand-item">Telepass</span>
+              <span class="brand-item">CIF</span>
+              <span class="brand-item">AMUCHINA</span>
+              <span class="brand-item">Multicentrum</span>
+              <span class="brand-item">Algida</span>
+              <span class="brand-item">WIQO</span>
+              <span class="brand-item">Sunsilk</span>
+              <span class="brand-item">Sagre Autentiche</span>
+            </div>
+          </section>
+
+          <section class="formation-section">
+            <h2>Formazione e certificazioni</h2>
+            <div class="card">
+              <p><strong>AANT - Accademia delle Arti e Nuove Tecnologie</strong><br />Graphic Design, Nov 2019 - Giu 2022, Roma</p>
+              <p><strong>LEARNN</strong><br />Percorsi su marketing digitale, social media, AI e produttivita creativa.</p>
+              <p><strong>Corsi di Digital Skills, Marketing, SEO</strong><br />LV8 Certification Badge</p>
+            </div>
+          </section>
+        </div>
+
+        <div class="side">
+          <section>
+            <h2>Competenze</h2>
+            <div class="tags">
+              <span class="tag">Visual design</span>
+              <span class="tag">ADV</span>
+              <span class="tag">Art direction</span>
+              <span class="tag">Layout digital</span>
+              <span class="tag">Print design</span>
+              <span class="tag">UX/UI</span>
+              <span class="tag">Landing page</span>
+              <span class="tag">Materiali Winsmart</span>
+              <span class="tag">Social content</span>
+              <span class="tag">Video editing</span>
+              <span class="tag">Copywriting</span>
+              <span class="tag">AI workflow</span>
+            </div>
+          </section>
+
+          <section>
+            <h2>Tool</h2>
+            <div class="card">
+              <p>Adobe Photoshop, Illustrator, InDesign, After Effects, Premiere Pro.</p>
+              <p>Figma, Mural, Whimsical, CapCut, editor video social.</p>
+              <p>Prompting, ricerca, scrittura creativa e produzione assistita da AI.</p>
+            </div>
+          </section>
+
+          <section>
+            <h2>Punti forti</h2>
+            <div class="card">
+              <p><strong>Adattamento rapido</strong> tra print, digital e video.</p>
+              <p>Attenzione a <strong>coerenza brand</strong>, leggibilita e output finale.</p>
+              <p><strong>Curiosita tecnica</strong> e uso consapevole dell'AI nel processo creativo.</p>
+            </div>
+          </section>
+
+          <section>
+            <h2>Lingue</h2>
+            <div class="card">
+              <p><strong>Italiano</strong> C2</p>
+              <p><strong>English</strong> B2</p>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
