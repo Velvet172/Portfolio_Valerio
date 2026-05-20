@@ -64,7 +64,7 @@ const pages = [
       href: "#exp",
     },
     {
-      icon: "✉️",
+      icon: "📬",
       t: "Contatti",
       s: "Mail e social",
       href: "#contact",
@@ -155,6 +155,8 @@ function renderPage() {
       const hasVideoPreview = x.previewVideo?.src;
       const videoPoster = x.previewVideo?.poster;
       const previews = Array.isArray(x.previews) ? x.previews : [];
+      const hasIconPreview = !hasVideoPreview && !previews.length;
+      const tileClass = hasIconPreview ? "wii-tile wii-tile--iconPreview" : "wii-tile";
       const posterAttr = videoPoster ? ` poster="${videoPoster}"` : "";
       const posterStyle = videoPoster ? ` style="--preview-poster:url('${videoPoster}')"` : "";
       const previewStyle =
@@ -180,7 +182,7 @@ function renderPage() {
         `;
 
       return `
-        <a class="wii-tile" href="${x.href}" data-href="${x.href}">
+        <a class="${tileClass}" href="${x.href}" data-href="${x.href}">
           ${previewHtml}
           <div class="wii-tileContent">
             <div class="wii-icon">${x.icon}</div>
