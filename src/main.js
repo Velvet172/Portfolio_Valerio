@@ -791,6 +791,16 @@ const channelContent = {
             `,
           },
           {
+            src: asset("img/PROGETTI/PROG_14.jpg"),
+            client: "Raffo",
+            title: "UX/UI + materiale promozionale",
+            what: "Landing + materiale print e web",
+            moreHtml: `
+              <h3 class="chMoreTitle">Raffo — Decisamente Pugliese</h3>
+              <p class="chMoreText">Visual e materiali promozionali per iniziativa Raffo: sviluppo di asset per landing, comunicazione web e supporti print, mantenendo coerenza con il tono grafico della campagna.</p>
+            `,
+          },
+          {
             src: asset("img/PROGETTI/PROG_8.jpg"),
             client: "Degustazioni a corte",
             title: "Produzione materiali evento",
