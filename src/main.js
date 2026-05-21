@@ -1261,7 +1261,7 @@ const channelContent = {
         </div>
 
         <div class="mgStage">
-          <canvas id="mgCanvas" width="900" height="520" style="width:100%; height:auto; display:block;"></canvas>
+          <canvas id="mgCanvas" width="900" height="520"></canvas>
 
           <div class="mgOver" id="mgOver" aria-hidden="true">
             <div class="mgOverPanel">
@@ -2475,7 +2475,10 @@ function mgBadSound() {
 }
 
 window.addEventListener("resize", () => {
-  if (document.getElementById("mgCanvas")) mgResizeCanvasForHiDpi();
+  if (document.getElementById("mgCanvas")) {
+    mgResizeCanvasForHiDpi();
+    mgDraw();
+  }
   setTileVideoZooms();
   updateVideoPreviewPlayback();
 });
